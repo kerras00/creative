@@ -1,8 +1,7 @@
 {
     "name": "megacreativo/creative",
-    "version": "1.0.0",
     "description": "The Creative Framework",
-    "keywords": ["framework", "creative"],
+    "keywords": ["framework", "creative", "php"],
     "type": "project",
     "license": "MIT",
     "authors": [{
@@ -22,11 +21,6 @@
     },
     "require-dev": {
         "phpunit/phpunit": "~5.7"
-    },
-    "autoload": {
-        "psr-4": {
-            "Tests\\": "tests/"
-        }
     },
     "scripts": {
         "test": "phpunit",
