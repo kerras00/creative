@@ -59,6 +59,7 @@ public_html/content/uploads/*
 # assets
 public_html/assets/js/*
 public_html/assets/components/*
+public_html/assets/components/**/*.html
 !public_html/assets/components/angular
 !public_html/assets/components/bootstrap
 !public_html/assets/components/extendmejs
