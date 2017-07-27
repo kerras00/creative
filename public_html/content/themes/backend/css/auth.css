@@ -1,0 +1,87 @@
+/**
+ * Page: auth & Register
+ * ----------------------
+ */
+
+body {
+    background: #f1f1f1 url(../images/auth-background.jpg) no-repeat center center fixed !important;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
+}
+
+.auth-logo,
+.register-logo {
+    font-size: 35px;
+    text-align: center;
+    margin-bottom: 25px;
+    font-weight: 300;
+}
+
+.auth-logo a,
+.register-logo a {
+    color: #444;
+    margin-top: 15px
+}
+
+.auth-page,
+.register-page {
+    background: #d2d6de;
+}
+
+.auth-box,
+.register-box {
+    width: 380px;
+    margin: 1% auto;
+    margin-top: 100px;
+    border: 1px solid #f1f1f1;
+    border-radius: 2px;
+    -webkit-box-shadow: 10px 10px 148px -20px rgba(217, 217, 217, 1);
+    -moz-box-shadow: 10px 10px 148px -20px rgba(217, 217, 217, 1);
+    box-shadow: 10px 10px 148px -20px rgba(217, 217, 217, 1);
+}
+
+@media (max-width: 768px) {
+    .auth-box,
+    .register-box {
+        width: 90%;
+        margin-top: 100px;
+    }
+}
+
+@media (max-width: 480px) {
+    .auth-logo h1{
+        font-size: 25px;
+    }
+}
+
+.auth-box-body,
+.register-box-body {
+    background: #fff;
+    padding: 20px;
+    border-top: 0;
+    color: #666;
+}
+
+.auth-box-body .form-control-feedback,
+.register-box-body .form-control-feedback {
+    color: #777;
+}
+
+.auth-box-msg,
+.register-box-msg {
+    margin: 0;
+    text-align: center;
+    padding: 0 20px 20px 20px;
+}
+
+.social-auth-links {
+    margin: 10px 0;
+}
+
+.auth-logo h1{
+    margin:10px 0;
+    text-transform: uppercase;
+    font-weight: 300;
+}

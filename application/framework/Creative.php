@@ -136,6 +136,15 @@ class Creative extends CreativeBase
 	}
 	
 
+	public static function alias( $alias, $func  )
+	{
+		return eval("
+		 	function $alias() { 
+				return call_user_func_array('$func', func_get_args());
+			}
+		");
+	}
+
 	function create_core(){
 		$this->add("DataBase");
 	}

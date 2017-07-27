@@ -1,0 +1,14 @@
+{
+  "name": "extendmejs",
+  "homepage": "https://github.com/megacreativo/ExtendmeJS",
+  "version": "1.0.1",
+  "_release": "1.0.1",
+  "_resolution": {
+    "type": "version",
+    "tag": "v1.0.1",
+    "commit": "d85363529bb9d0dbbfa5ebbd840a406fde5b8a35"
+  },
+  "_source": "https://github.com/megacreativo/ExtendmeJS.git",
+  "_target": "1.0.1",
+  "_originalSource": "extendmejs"
+}

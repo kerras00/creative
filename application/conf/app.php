@@ -6,7 +6,7 @@ return (object) [
     'company_name' => '',
     'version'=>1,
     
-    'lang' => 'en'
+    'locale' => 'es'
 
 ];
 

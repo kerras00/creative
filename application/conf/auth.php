@@ -3,6 +3,25 @@
 
 return (object) [
 
+    'auth_failed' => [
+
+        /**
+         * Cantidad de intentos permitidos
+         */
+        'try' => 3,
+
+        /**
+         * Tiempo para volver a hacer un intento de inicio de sesion
+         */
+        'time' => 90,
+
+        /**
+         * Establece si al alcanzar el numeros de intentos (try)
+         * se procede a blquear la cuenta
+         */
+        'inactivate' => false
+    ],
+
     'user_status' => array(
         'logical_erasure' => -1,
         'inactive' => 0,

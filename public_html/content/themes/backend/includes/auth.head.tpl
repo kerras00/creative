@@ -19,7 +19,7 @@
 
     <link rel="stylesheet" href="{$assets.components}font-awesome/css/font-awesome.min.css" type="text/css" />
 
-    <script type="text/javascript" src="{$assets.components}extendjs/dist/js/extendjs.js"></script>
+    <script type="text/javascript" src="{$assets.components}extendmejs/dist/extendme.js"></script>
 
     <!-- Responsivity for older IE -->
     <!--[if lt IE 9]>
@@ -27,7 +27,6 @@
         <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
 	<![endif]-->
 
-    <link rel="stylesheet" href="{$theme.backend.css}style.css" type="text/css" />
-    <link rel="stylesheet" href="{$theme.backend.css}skins/skin-turquoise.css">
-    <link rel="stylesheet" href="{$theme.backend.css}custom.css" type="text/css" />
+    <link rel="stylesheet" href="{$theme.css}style.css?v={rand()}" type="text/css" />
+    <link rel="stylesheet" href="{$theme.css}auth.css?v={rand()}" type="text/css" />
 </head>

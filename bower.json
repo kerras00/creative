@@ -15,17 +15,19 @@
     "tests"
   ],
   "dependencies": {
-    "jquery": "~3.2",
-    "angular": "1.6.5",
+    "jquery": "*",
+    "extendmejs":"1.0.11",
     "bootstrap": "3.3.7",
     "font-awesome": "*",
+    "angular": "1.6.5",  
+    "jquery.numeric": "*",  
     "select2": "4.0.3",
-    "datatable": "1.10",
-    "colorpicker":"latest",
-    "jquery.numeric": "*",
+    "datatable": "~1.10",
+    "colorpicker":"1.2", 
     "daterangepicker": "latest",
     "bootstrap-datepicker": "~1.7.1",
-    "is-loading":"2.0",
-    "extendmejs":"1.0.1"
+    "is-loading":"2.0",    
+    "bootbox":"4.4.0",
+    "smoothscroll-for-websites":"v1.4.6"
   }
 }

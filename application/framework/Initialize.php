@@ -38,11 +38,13 @@ abstract class Initialize
 		Creative::add( 'Components' );
 		Creative::add( 'Hash' );
 		Creative::add( 'Session' );
-
-		Lang::set_lang( 'es' );
 		
-		Creative::include_config( 'app' );
+		App::initialize();
+		
 		Creative::include_config( 'auth' );
+
+		Lang::set_locale( App::get()->locale );
+
 
 		Creative::get( 'Session' )->initialize();
 	}

@@ -10,24 +10,48 @@ abstract class Lang
      * @param [type] $option
      * @return void
      */
-    public static function get($message, $option = NULL)
+    public static function get($message, $option = NULL, $other = NULL)
     {
+        $msg = '';
         if( strpos($message,'.') !== FALSE ){
             $file = explode('.', $message)[0];
             $message = explode('.', $message)[1];
 
             if( file_exists(PATH_APP .DS. 'langs' .DS. self::$lang_active .DS. $file.'.php') ){
                 $messages = include PATH_APP .DS. 'langs' .DS. self::$lang_active .DS. $file.'.php';
-                return $messages[$message];
+                $msg = $messages[$message];
             } else return '';
             
         } else {
             if( file_exists(PATH_APP .DS. 'langs' .DS. self::$lang_active .DS. 'default.php') ){
                 $messages = include PATH_APP .DS. 'langs' .DS. self::$lang_active .DS. 'default.php';
-                return $messages[$message];
-            } else return '';
-            
+                $msg = $messages[$message];
+            } else return '';            
         }
+
+        //Pluralización
+        if( strpos($msg,'|') !== FALSE ){
+            if( is_numeric($option) ){
+                if( $option <= 1 ){
+                    $msg = explode('|', $msg)[0];
+                } else {
+                    $msg = explode('|', $msg)[1];
+                }
+            } else{
+                $msg = explode('|', $msg)[0];
+            }
+        }
+
+        //Reemplazo de texto
+        if( is_array($option) ){
+            foreach ($option as $key => $value) {
+                $msg = substr( ':'.$key, $value, $msg );
+            }
+        } elseif( is_numeric($option) ){
+            $msg = str_ireplace( '{0}', $option, $msg );
+        }       
+
+        return $msg;
         
     }
 
@@ -37,13 +61,11 @@ abstract class Lang
      * @param [type] $lang
      * @return void
      */
-    public static function set_lang( $lang = NULL){
+    public static function set_locale( $lang = NULL){
         self::$lang_active = $lang;        
     }
 }
 
-function l($message, $option = NULL){
-    return Lang::get($message, $option);   
-}
+Creative::alias('l','Lang::get');
 
 ?>
