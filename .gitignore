@@ -26,7 +26,7 @@ $RECYCLE.BIN/
 # Otros
 #-----------------------------------------------
 *.tasks
-*.html
+
 
 
 #-----------------------------------------------
@@ -64,7 +64,7 @@ public_html/assets/components/*
 !public_html/assets/components/extendmejs
 !public_html/assets/components/font-awesome
 !public_html/assets/components/jquery
-public_html/assets/components/**/*.html
+
 
 #-----------------------------------------------
 # API
