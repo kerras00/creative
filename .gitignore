@@ -57,6 +57,7 @@ application/temporal/templates_c/*
 public_html/content/uploads/*
 
 # assets
+public_html/assets/js/*
 public_html/assets/components/*
 !public_html/assets/components/angular
 !public_html/assets/components/bootstrap
