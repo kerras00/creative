@@ -1,7 +1,7 @@
 {
   "name": "extendmejs",
   "homepage": "https://github.com/megacreativo/ExtendmeJS",
-  "version": "1.0.12",
+  "version": "1.0.11",
   "authors": [
     "Brayan Rincon <brayan262@gmail.com>"
   ],
@@ -25,14 +25,5 @@
     "bower_components",
     "test",
     "tests"
-  ],
-  "_release": "1.0.12",
-  "_resolution": {
-    "type": "version",
-    "tag": "v1.0.12",
-    "commit": "3e07860b79457879f01ed70336b3f611bf73d46a"
-  },
-  "_source": "https://github.com/megacreativo/ExtendmeJS.git",
-  "_target": "1.0.12",
-  "_originalSource": "extendmejs"
+  ]
 }
