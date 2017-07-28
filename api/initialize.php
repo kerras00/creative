@@ -28,10 +28,9 @@ abstract class Initialize
 		Creative::add( 'Session' );
 		Creative::add( 'View' );
 
-		Creative::include_config( 'auth' );
-
-		App::initialize();		
-		Creative::include_config( 'auth' );
+		App::initialize();
+		Auth::initialize();
+		
 		Lang::set_locale( App::get()->locale );
 
 		Creative::get( 'Session' )->initialize();

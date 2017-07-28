@@ -11,7 +11,7 @@ abstract class App
      * @return void
      */
     public static function set_locale( $lang = NULL){
-        Lang::set_lang($lang);        
+        Lang::set_locale($lang);        
     }
 
 

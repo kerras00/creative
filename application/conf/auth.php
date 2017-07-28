@@ -13,7 +13,7 @@ return (object) [
         /**
          * Tiempo para volver a hacer un intento de inicio de sesion
          */
-        'time' => 90,
+        'time' => 60,
 
         /**
          * Establece si al alcanzar el numeros de intentos (try)

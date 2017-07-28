@@ -18,6 +18,21 @@ spl_autoload_register('autoload_kernel');
 
 /**
  * Función de autoload
+ * Se utiliza para incluir Componetes del Kernel
+ * @param $file string el Nombre de la clase
+ */ 
+function autoload_handlers( $file ) {
+	if(file_exists(PATH_APP . 'handlers' .DS. $file . '.php')){
+		include_once(PATH_APP . 'handlers' .DS. $file . '.php');
+	}
+}
+spl_autoload_register('autoload_handlers');
+
+
+
+
+/**
+ * Función de autoload
  * Se utiliza para incluir Libreías
  * @param $file string el Nombre de la clase
  */ 

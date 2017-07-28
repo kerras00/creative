@@ -1,6 +1,6 @@
 <?php
 /** -----------------------------------------------------------------------
- * Controller @name
+ * Controller dashboard
  * ------------------------------------------------------------------------
  * #
  * 
@@ -8,7 +8,7 @@
  * @version 1.0.0
  * @author name <name@email.com>
  */
-class @nameController extends Controller 
+class dashboardController extends Controller 
 {
     function __construct() {
 		parent::__construct(__CLASS__);
@@ -22,7 +22,7 @@ class @nameController extends Controller
 		* This global variable saves an instance 
 		* in a table that matches the class name
 		*/
-		$this->model_base = $this->load_model('@name');
+		$this->model_base = $this->load_model('dashboard');
 
 		/**
 		* Avoid caching
@@ -40,10 +40,9 @@ class @nameController extends Controller
      * @author name <name@email.com>
      */
     public function index(){
-        
-
-        $this->view->theme( FRONTEND );
-        $this->view->template( 'default' );
+		$this->view->theme( BACKEND );
+		$this->view->ambit( BACKEND );
+        $this->view->template( 'template' );
         $this->view->render( __FUNCTION__ );
     }
 }

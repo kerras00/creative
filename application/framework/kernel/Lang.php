@@ -64,6 +64,10 @@ abstract class Lang
     public static function set_locale( $lang = NULL){
         self::$lang_active = $lang;        
     }
+
+    public static function get_locale(){
+        return self::$lang_active;
+    }
 }
 
 Creative::alias('l','Lang::get');

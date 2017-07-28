@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="es-ES">
+<html lang="{Lang::get_locale()}">
 
 <head>
     <meta charset="utf-8">
