@@ -4,9 +4,9 @@
 
 Creative **`Lang`** proporciona una manera conveniente de recuperar cadenas de texto en varios idiomas, lo que le permite soportar fácilmente varios idiomas dentro de su aplicación.
 
-## Archivos de idioma
+## Language files
 
-Las cadenas de idiomas se almacenan en archivos dentro del directorio **`application/langs`**. Dentro de este directorio debe haber un subdirectorio para cada idioma soportado por la aplicación.
+Language strings are stored in files within the ** application / langs ** directory. Within this directory there should be a subdirectory for each language supported by the application.
 
 ```
 /application
@@ -17,9 +17,9 @@ Las cadenas de idiomas se almacenan en archivos dentro del directorio **`applica
             messages.php
 ```
 
-## Ejemplo del archivo de idioma
+## Language File Example
 
-Los archivos de idioma simplemente devuelven una matriz de cadenas con clave. Por ejemplo:
+Language files simply return an array of strings with a key. For example:
 
 ```php
 <?php
@@ -29,9 +29,9 @@ return [
 ];
 ```
 
-## Cambiar el idioma predeterminado
+## Change the default language
 
-El idioma predeterminado para su aplicación se almacena en el archivo de configuración **`application/config/app.php`**.
+The default language for your application is stored in the configuration file ** `application / config / app.php` **.
 
 ```php
 <?php
@@ -42,32 +42,32 @@ return (object) [
 
 ```
 
-## Uso básico
+## Basic use
 
-### Recuperación de líneas de un archivo de idioma
+### Retrieving Lines from a Language File
 
-El primer segmento de la cadena pasada al método get es el nombre del archivo de idioma y el segundo es el nombre de la línea que se debe recuperar.
+The first segment of the string passed to the get method is the name of the language file and the second is the name of the line to retrieve.
 
 ```php
 echo Lang::get ('messages.welcome');
 ```
-### Reemplazos en líneas
+### Line Replacements
 
-También puede definir patrones para ser reemplazados en las líneas de su idioma:
+You can also define patterns to be replaced on the lines of your language:
 
 ```php
 'welcome' => 'Welcome, :name',
 ```
 
-Luego, pase un segundo argumento de reemplazos al método Lang::get:
+Then pass a second argument of replacements to the Lang :: get method:
 
 ```php
 echo Lang::get('messages.welcome', ['name' => 'Matias']);
 ```
 
-## Pluralización
+## Pluralization
 
-La pluralización es un problema complejo, ya que diferentes lenguajes tienen una variedad de reglas complejas para la pluralización. Puede administrar fácilmente esto en sus archivos de idioma. Mediante el uso de un carácter "*pipe*", puede separar las formas singular y plural de una cadena:
+Pluralization is a complex problem, since different languages have a variety of complex rules for pluralization. You can easily manage this in your language files. By using a "* pipe *" character, you can separate the singular and plural forms of a string:
 
 ```php
 'apples' => 'There is one apple|There are many apples|There are some apples',
@@ -76,12 +76,12 @@ La pluralización es un problema complejo, ya que diferentes lenguajes tienen un
 ```php
 echo Lang::get('messages.apples', 2);
 ```
-El segundo parametro (2), indica cual de las cadenas será seleccionada. El resultado del ejemplo sería:
+The second parameter (2) indicates which of the strings will be selected. The result of the example would be:
 ```
 There are some apples
 ```
 
-Otra forma es usar un patron para ser reemplazado
+Another way is to use a pattern to be replaced
 
 ```php
 'apples' => 'There are {0} apples',
@@ -90,7 +90,7 @@ Otra forma es usar un patron para ser reemplazado
 ```php
 echo Lang::get('messages.apples', 100);
 ```
-El segundo parametro (100), será el número por el cual será reemplazado el patron *{0}*. El resultado del ejemplo sería:
+The second parameter (100) will be the number by which the pattern * {0} * will be replaced. The result of the example would be:
 ```
 There are 100 apples
 ```
