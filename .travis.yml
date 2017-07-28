@@ -3,6 +3,7 @@ php:
   - '5.6'
   - '7.0'
   - hhvm # on Trusty only
-  - nightly
 env:
   - DB=mysql
+after_success:
+  - echo "¡Éxito!"
