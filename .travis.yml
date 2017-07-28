@@ -6,4 +6,3 @@ php:
   - nightly
 env:
   - DB=mysql
-  - DB=pgsql
