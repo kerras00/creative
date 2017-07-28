@@ -1,10 +1,12 @@
 language: php
+
 php:
   - '5.6'
   - '7.0'
+
 install:
-  - php ./vendor/autoload.php
-env:
-  - DB=mysql
-after_success:
-  - echo "¡Éxito!"
+  - curl -s https://getcomposer.org/installer | php
+  - php composer.phar install
+
+
+script: phpunit

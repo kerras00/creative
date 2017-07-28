@@ -61,7 +61,7 @@
 {/if}
 
 <script>
-    ExtendJS.path = '{BASE_URL}/asset/components/extendmejs/';
+    ExtendmeJS.path = '/assets/components/extendmejs/';
     npm('notify');
 </script>
 
@@ -78,13 +78,13 @@
 
         if ( !$('#email').val().isEmail() ) {
             $('#email').focus().parent().addClass('has-error');
-            ex.notify('{Lang::get("auth.email_required")}', 'error');
+            ex.notify('{Lang::get("auth.email_required")}', 'warning');
             return false;
         }
 
         if ($('#pass').val() == '') {
             $('#pass').focus().parent().addClass('has-error');
-            ex.notify('{Lang::get("auth.pass_required")}', 'error');
+            ex.notify('{Lang::get("auth.pass_required")}', 'warning');
             return false;
         }
 
@@ -104,7 +104,7 @@
 
                 if (data.status == 200) {
                     setTimeout(function() {
-                        location.href = data.default_module;
+                        location.href = data.redir;
                     }, 1000);
                     $('.auth-box').fadeOut();
                     ex.notify(data.statusText, data.icon);

@@ -253,10 +253,10 @@ var _type_ = {
      */
     var include = function (path, attr, parent) {
         
-        if (path.contains('js') == true) {
+        if (path.contains('.js') == true) {
 			type = 'script';
 			file = head.getElementsByTagName('script');
-		} else if(path.contains('css') == true){
+		} else if(path.contains('.css') == true){
 			type = 'style';
 			file = head.getElementsByTagName('style');
 		} else {
@@ -300,10 +300,10 @@ var _type_ = {
      */
     var includeOnce = function (path, attr, parent) {
 
-        if (path.contains('js') == true) {
+        if (path.contains('.js') == true) {
 			type = 'script';
 			file = head.getElementsByTagName('script');
-		} else if(path.contains('css') == true){
+		} else if(path.contains('.css') == true){
 			type = 'style';
 			file = head.getElementsByTagName('style');
 		} else {

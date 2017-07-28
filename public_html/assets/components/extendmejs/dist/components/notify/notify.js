@@ -4,7 +4,7 @@
 	var settings = {
         inEffect: 			{opacity: 'show'},	// in effect
         inEffectDuration: 	400,				// in effect duration in miliseconds
-        stayTime: 			4000,				// time in miliseconds before the item has to disappear
+        stayTime: 			5000,				// time in miliseconds before the item has to disappear
         text: 				'',					// content of the item
         sticky: 			false,				// should the notify item sticky or not?
         type: 				'info', 			// info, warning, error, success
@@ -25,47 +25,47 @@
             $.extend(localSettings, settings, options);
 
 			// declare variables
-            var wrapAll, outer, inner, close, icon;
+            var container, outer, inner, close, icon;
 
-			wrapAll	= (!$('.notify-container').length) ? $('<div></div>').addClass('notify-container').addClass('notify-position-' + localSettings.position).appendTo('body') : $('.notify-container');
-			outer	= $('<div></div>').addClass('notify-item-wrapper');
-			inner	= $('<div></div>').hide().addClass('notify-item notify-type-' + localSettings.type).appendTo(wrapAll).html('<p>'+localSettings.text+'</p>').animate(localSettings.inEffect, localSettings.inEffectDuration).wrap(outer);
-            close = $('<div></div>').addClass('notify-item-close').prependTo(inner).html(localSettings.closeText).click(function () {
-                ExtendJS.notify('removeNotify', inner, localSettings)
+			container   = (!$('.notify-container').length) ? $('<div></div>').addClass('notify-container').addClass('notify-position-' + localSettings.position).appendTo('body') : $('.notify-container');
+			outer	    = $('<div></div>').addClass('notify-item-wrapper');
+			inner	    = $('<div></div>').hide().addClass('notify-item notify-type-' + localSettings.type).appendTo(container).html('<p>'+localSettings.text+'</p>').animate(localSettings.inEffect, localSettings.inEffectDuration).wrap(outer);
+            close       = $('<div></div>').addClass('notify-item-close').prependTo(inner).html(localSettings.closeText).click(function () {
+                notify_handler('removeNotify', inner, localSettings)
             });
 			icon  = $('<div></div>').addClass('notify-item-image').addClass('notify-item-image-' + localSettings.type).prependTo(inner);
 
             if(navigator.userAgent.match(/MSIE 6/i)){
-		    	wrapAll.css({top: document.documentElement.scrollTop});
+		    	container.css({top: document.documentElement.scrollTop});
 		    }
 
 			if(!localSettings.sticky){
 				setTimeout(function(){
-					ExtendJS.notify('removeNotify', inner, localSettings);
+					notify_handler('removeNotify', inner, localSettings);
 				},
 				localSettings.stayTime);
 			}
             return inner;
 		},
 
-        info : function (message){
-            var options = {text : message, type : 'info'};
-            return ExtendJS.notify('show', options);
+        info : function (options){
+            var options = {text : options.message, type : 'info'};
+            return notify_handler('show', options);
         },
 
-        success : function (message){
-            var options = {text : message, type : 'success'};
-            return ExtendJS.notify('show', options);
+        success : function (options){
+            var options = {text : options.message, type : 'success'};
+            return notify_handler('show', options);
         },
 
-        error : function (message){
-            var options = {text : message, type : 'error'};
-            return ExtendJS.notify('show', options);
+        error : function (options){
+            var options = {text : options.message, type : 'error'};
+            return notify_handler('show', options);
         },
 
-        warning : function (message){
-            var options = {text : message, type : 'warning'};
-            return ExtendJS.notify('show', options);
+        warning : function (options){
+            var options = {text : options.message, type : 'warning'};
+            return notify_handler('show', options);
         },
 
 		removeNotify: function(obj, options){
@@ -81,15 +81,30 @@
 		}
 	};
 
-    ex.notify = function( method ) {
-        // Method calling logic
+    notify_handler = function (method) {
         if ( methods[method] ) {
-            return methods[ method ].apply( this, Array.prototype.slice.call( arguments, 1 ));
+          return methods[ method ].apply( this, Array.prototype.slice.call( arguments, 1 ));
         } else if ( typeof method === 'object' || ! method ) {
-            return methods.init.apply( this, arguments );
-        } else {
-            $.error( 'Method ' +  method + ' does not exist on jQuery.notify' );
+          return methods.init.apply( this, arguments );
         }
     };
+    
+    ExtendmeJS.notify = function (message, type, time) {
+        var attr = {
+            message: message,
+            position: settings.position,
+            sticky: settings.sticky,
+            stayTime: time ? time : settings.stayTime,
+            type: type ? type : 'info',
+        }; 
+        
+        if (time === true) {
+            attr.stayTime = settings.stayTime;
+            attr.sticky = true;
+        }
+        methods[ 'init' ](attr);
+        return methods[ type ](attr);
+    };
+  
 
-})(jQuery, ExtendJS);
+})(jQuery);

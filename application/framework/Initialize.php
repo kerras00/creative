@@ -42,7 +42,6 @@ abstract class Initialize
 		App::initialize();
 		
 		Creative::include_config( 'auth' );
-
 		Lang::set_locale( App::get()->locale );
 
 

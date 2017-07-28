@@ -13,6 +13,7 @@ define('DEFAULT_FORMAT', 'json');
 require_once PATH_API . 'defines.php';
 require_once PATH_FRAMEWORK . 'eviroment.php';
 require_once PATH_FRAMEWORK . 'Creative.php';
+require_once PATH_FRAMEWORK . 'Autoload.php';
 require_once PATH_KERNEL . 'Conexant.php';
 require_once PATH_KERNEL . 'sessions/Session.php';
 
@@ -27,10 +28,11 @@ abstract class Initialize
 		Creative::add( 'Session' );
 		Creative::add( 'View' );
 
-		Lang::set_lang( 'es' );
-		
-		Creative::include_config( 'app' );
 		Creative::include_config( 'auth' );
+
+		App::initialize();		
+		Creative::include_config( 'auth' );
+		Lang::set_locale( App::get()->locale );
 
 		Creative::get( 'Session' )->initialize();
 	}

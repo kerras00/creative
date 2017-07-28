@@ -41,12 +41,15 @@ vendor/*
 #-----------------------------------------------
 application/settings.json
 
-# libs
+# application
 application/libs/*
+application/logs/*
 !application/libs/paginator
 !application/libs/captcha
 
-application/logs/*
+application/helpers/
+application/triggers/
+application/middleware/
 
 # temporal
 application/temporal/cache/*
