@@ -25,9 +25,12 @@
     "scripts": {
         "test": "phpunit",
         "post-install-cmd": [
-            "php -r \"file_exists('application/settings.json') || copy('application/configuration.json.example', 'application/settings.json');\""
+            "php -r \"file_exists('application/settings.json') || copy('application/settings.json.example', 'application/settings.json');\""
         ]
-    },
+    },    
+    "suggest": {
+        "monolog/monolog": "Allows more advanced logging of the application flow"
+    },    
     "minimum-stability": "dev",
     "prefer-stable": true
 }

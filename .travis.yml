@@ -4,3 +4,6 @@ php:
   - '7.0'
   - hhvm # on Trusty only
   - nightly
+env:
+  - DB=mysql
+  - DB=pgsql

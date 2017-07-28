@@ -1,5 +1,12 @@
-# Creative Framework
+<p align="center"><img src="http://megacreativo.com/assets/img/creative/logo-creative.png" width="400"></p>
 
+<p align="center">
+<a href="https://travis-ci.org/megacreativo/creative"><img src="https://travis-ci.org/megacreativo/creative.svg?branch=master" alt="Build Status"></a>
+<a href="https://packagist.org/packages/megacreativo/creative"><img src="https://poser.pugx.org/megacreativo/creative/v/stable" alt="Latest Stable Version"></a>
+<a href="https://packagist.org/packages/megacreativo/creative"><img src="https://poser.pugx.org/megacreativo/creative/license" alt="License"></a>
+</p>
+
+# Creative Framework
 
 ## A cerca de  Creative
 
