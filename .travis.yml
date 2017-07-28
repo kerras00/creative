@@ -2,7 +2,8 @@ language: php
 php:
   - '5.6'
   - '7.0'
-  - hhvm # on Trusty only
+install:
+  - php ./vendor/autoload.php
 env:
   - DB=mysql
 after_success:
