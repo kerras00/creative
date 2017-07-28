@@ -1,4 +1,4 @@
-# Localización
+# localización
 
 ## Introducción
 
