@@ -41,8 +41,7 @@ class dashboardController extends Controller
      */
     public function index(){
 		$this->view->theme( BACKEND );
-		$this->view->ambit( BACKEND );
-        $this->view->template( 'template' );
+        $this->view->template( 'default' );
         $this->view->render( __FUNCTION__ );
     }
 }
