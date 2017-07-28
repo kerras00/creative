@@ -9,7 +9,7 @@ return [
 
     'send_recovery'=> 'Hemos enviado un conreo electrónico con las instracciones para reestablecer tu contaseña',
 
-    'recovery_html'=> [
+    'recovery_email'=> [
         'intro' => 'Hola, :name',
         'body' => 'Recientemente nos ha notificado que ha olvidado su contraseña. Para ayudarle a recordar su contraseña, utilice la siguiente información. Si usted no solicitó esta petición ignore este email.',
         'body_food' => 'Tenga en cuenta que no tienemos acceso a su cuenta y no puede restablecer su contraseña.',
