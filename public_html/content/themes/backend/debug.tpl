@@ -9,7 +9,11 @@
 	{include file=$themes.dir|cat:'includes/breadcrumbs.front.tpl'}
 {/if}
 
-{if strpos($_html , ".tpl") == true}{include file=$_html}{else}{$_html}{/if}
+{if strpos($view_html , ".tpl") == true}
+	{include file=$view_html}
+{else}
+	{$view_html}
+{/if}
 
 {include file="includes/footer.front.tpl"}
 	</div>

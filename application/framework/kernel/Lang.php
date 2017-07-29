@@ -14,19 +14,29 @@ abstract class Lang
     {
         $msg = '';
         if( strpos($message,'.') !== FALSE ){
-            $file = explode('.', $message)[0];
-            $message = explode('.', $message)[1];
+            $arr = explode('.', $message);
+            $file = $arr[0];
+            $message = $arr[1];
+
+            $file = $file == '' ? 'default' : $file ;
 
             if( file_exists(PATH_APP .DS. 'langs' .DS. self::$lang_active .DS. $file.'.php') ){
-                $messages = include PATH_APP .DS. 'langs' .DS. self::$lang_active .DS. $file.'.php';
+                $messages = include PATH_APP . 'langs' .DS. self::$lang_active .DS. $file.'.php';
                 $msg = $messages[$message];
-            } else return '';
+            } else {
+                $messages = include PATH_APP . 'langs' .DS. self::$lang_active .DS. 'default.php';
+                $msg = $messages[$arr[0]];
+            };
             
         } else {
             if( file_exists(PATH_APP .DS. 'langs' .DS. self::$lang_active .DS. 'default.php') ){
                 $messages = include PATH_APP .DS. 'langs' .DS. self::$lang_active .DS. 'default.php';
                 $msg = $messages[$message];
             } else return '';            
+        }
+
+        if( is_array($msg) ){
+            $msg = $msg[$arr[1]];
         }
 
         //Pluralización

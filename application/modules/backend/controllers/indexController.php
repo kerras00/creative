@@ -1,23 +1,51 @@
 <?php
-
-if( !defined('CREATIVE') ) die('Can not access from here');
-
-class indexController extends backendController {
-	
-	public function __construct() {
+/** 
+ * ------------------------------------------------------------------------
+ * Controller dashboard
+ * ------------------------------------------------------------------------
+ * #
+ * 
+ * @category Controllers
+ * @version 1.0.0
+ * @author name <name@email.com>
+ */
+class indexController extends backendController 
+{
+    function __construct() {
 		parent::__construct(__CLASS__);
-		$this->view->ambit( BACKEND );
-		$this->view->theme( BACKEND );
-		$this->view->template('template');
-		$this->no_cache();
 		
-		$this->module = __CLASS__;
-	}
-	
-	
-	public function index() {
-		$this->view->render( __FUNCTION__ );
-	}
-	
+		/**
+		* Default template in which views are rendered
+		*/
+        $this->view->template ( 'default' );
+        
+        $this->view->theme( BACKEND );
+		/**
+		* This global variable saves an instance 
+		* in a table that matches the class name
+		*/
+		$this->model_base = $this->load_model('dashboard');
+
+		/**
+		* Avoid caching
+		*/
+        $this->no_cache();
+    }
+
+
+
+    /** 
+     * ------------------------------------------------------------------------
+     * Default Index Method
+     * ------------------------------------------------------------------------
+     * #
+     * 
+     * @author name <name@email.com>
+     */
+    public function index(){
+        $this->view->render( __FUNCTION__ );
+    }
 }
 
+
+?>

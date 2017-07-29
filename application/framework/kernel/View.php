@@ -50,7 +50,7 @@ class View extends SmartyBC
 		 * @var string Template
 		 * ----------------------------------------------------
 		 */
-		, $_template 	= 'template'
+		, $_template 	= 'default'
 		//, $_ambit 		= 'frontend'
 
 		/**
@@ -154,14 +154,14 @@ class View extends SmartyBC
 
 	public function render($view, $options = NULL) {
 
-		$this->_module		= $this->_request->get_module();
-		$this->_controller 	= $this->_request->get_controller();
-		$this->_route 		= ViewRoutes::get($this->_theme, $this->_controller, $this->_module);	
+		$module		= $this->_request->get_module();
+		$controller = $this->_request->get_controller();
+		$route 		= ViewRoutes::get($this->_theme, $controller, $module);	
 
 		if( $module ){
-			$path_base_view = PATH_MODULES . $module .DS. 'views' .DS. $this->_controller .DS;		
+			$path_base_view = PATH_MODULES . $module .DS. 'views' .DS. $controller .DS;		
 		} else {
-			$path_base_view = PATH_VIEWS . $this->_controller .DS;	
+			$path_base_view = PATH_VIEWS . $controller .DS;	
 		}
 
 		if( strpos($view, '.') !== FALSE ){
@@ -180,17 +180,15 @@ class View extends SmartyBC
 			ErrorHandler::run_exception( 'View Not Found: [' . $path_view. ']' );
 		}
 
-
-
-		$this->template_dir = $this->_route['theme']['path'];
+		$this->template_dir = $route['theme']['path'];
 		$this->config_dir 	= PATH_TEMPORAL . 'configs';
 		$this->compile_dir 	= PATH_TEMPORAL . 'templates_c' . DS;
     	$this->cache_dir 	= PATH_TEMPORAL . 'cache' . DS;
 		
-		$this->assign('theme'		, $this->_route['theme']);
-		$this->assign('assets'		, $this->_route['assets']);
-		$this->assign('brand'		, $this->_route['brand']);
-		$this->assign('uploads'		, $this->_route['uploads']);
+		$this->assign('theme'		, $route['theme']);
+		$this->assign('assets'		, $route['assets']);
+		$this->assign('brand'		, $route['brand']);
+		$this->assign('uploads'		, $route['uploads']);
 		$this->assign('angular'		, $this->_use_angular);
 		//$this->assign('echo'		, $GLOBALS['CREATIVE']['echo']);
 		//$this->assign('app'			, $GLOBALS['CREATIVE']['CONF']['app']);
@@ -211,68 +209,8 @@ class View extends SmartyBC
 		}
 
     }
-	
-	
-	
-	
-	/**
-	 * Renderiza una vista (página)
-	 * 
-	 * @param {String} $vista Nombre de la vista (página) que se va a renderizar
-	 * @param {String} $group Grupo de la vista. Ej: Departamento al cual pertence la vista. Si no se especifica por defecto será DEFAULT_LAYOUT
-	 * @param {Boolean} $item Item del menú que está activo (selected)
-	 * @return
-	 */
-	public function render_error( $error ) {
-		
-		if( $this->_ambit == BACKEND ){
-			$template_dir = PATH_CONTENT . 'themes' .DS. 'backend' . DS;
-		} else {
-			$template_dir = PATH_CONTENT . 'themes' .DS. $this->_theme . DS;
-		}
-		
-		
-		$this->template_dir = $template_dir;
-		$this->config_dir 	= PATH_CONTENT . 'themes' .DS. $this->_template . DS . 'config' . DS;
-		$this->compile_dir 	= PATH_TEMPORAL . 'templates_c' . DS;
-    	$this->cache_dir 	= PATH_TEMPORAL . 'cache' . DS;
-    	
-               		
-		$rutas 	= $this->_route;
-		$css	= $this->_css;
-		$js		= $this->_js;
-		$page 	= array('js'=>$js,'css'=>$css);
-		
-		$vista			= $error ? $error : DEFAULT_VIEW;
-		$path_view 	 	= PATH_VIEWS .'_errors'.DS. $vista . '.tpl';
-		
-		$page = array('js'=>$js,'css'=>$css);
-		
-		if (is_readable($path_view)) {			
-			$this->assign('_html', $path_view);
-		} else {			
-			$out  = '<strong style="color:red"> View Not Found <i>"'.$path_view.'"</i></strong><br/><br/>';
-			$out .= '<strong>File:</strong> '.__FILE__.'<br/>';
-			$out .= '<strong>Method:</strong> '. __FUNCTION__ .'<br/>';
-			$out .= '<strong>Line:</strong> '.__LINE__;	
-			ErrorHandler::run_exception( 'View Not Found: [' . $vista. ']' );	
-				
-			//CreativeBase::run_exception('View Not Found', $out);
-		}
-				
-		$this->assign('favicon'		, $rutas['brand']['favicon']);
-		$this->assign('lang'		, DEFAULT_LANG);		
-		$this->assign('theme'		, $rutas['theme']);
-		$this->assign('assets'		, $rutas['assets']);		
-		
-		
-		if( $this->_compress ) $this->init_compress();		
-		$this->display('errors.tpl');
-		if( $this->_compress ) $this->end_compress();
-    }
-	
-	
-	
+
+
 	private function init_compress(){
 		ob_start(function ($buffer){
 			$search = array('/\>[^\S ]+/s','/[^\S ]+\</s','/(\s)+/s');

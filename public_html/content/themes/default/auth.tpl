@@ -18,10 +18,10 @@ body{
 <body style="background-color: #000000">
  
 
-{if strpos($_html , ".tpl") == true }
-	{include file=$_html nocache}
+{if strpos($view_html , ".tpl") == true }
+	{include file=$view_html nocache}
 {else}
-	{$_html}
+	{$view_html}
 {/if} 
 		
 </body>

@@ -16,8 +16,9 @@ class dashboardController extends Controller
 		/**
 		* Default template in which views are rendered
 		*/
-        $this->view->template ("template");
-
+        $this->view->template ( 'default' );
+        
+        $this->view->theme( BACKEND );
 		/**
 		* This global variable saves an instance 
 		* in a table that matches the class name
@@ -32,7 +33,8 @@ class dashboardController extends Controller
 
 
 
-    /** -----------------------------------------------------------------------
+    /** 
+     * ------------------------------------------------------------------------
      * Default Index Method
      * ------------------------------------------------------------------------
      * #
@@ -40,8 +42,6 @@ class dashboardController extends Controller
      * @author name <name@email.com>
      */
     public function index(){
-		$this->view->theme( BACKEND );
-        $this->view->template( 'default' );
         $this->view->render( __FUNCTION__ );
     }
 }

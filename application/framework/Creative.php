@@ -52,8 +52,8 @@ class Creative extends CreativeBase
 
 
 	public static function load_config( $config ){
-		if( file_exists(PATH_CONF .DS. $config.'.php') ){
-			return include PATH_CONF .DS. $config.'.php';
+		if( file_exists(PATH_CONF . $config.'.php') ){
+			return include PATH_CONF . $config.'.php';
 		}
 	}
 	/**

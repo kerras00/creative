@@ -40,9 +40,9 @@ abstract class Initialize
 		Creative::add( 'Session' );
 		
 		App::initialize();
-		Auth::initialize();
-		
 		Lang::set_locale( App::get()->locale );
+
+		Auth::initialize();
 
 		Creative::get( 'Session' )->initialize();
 	}

@@ -148,12 +148,11 @@ class Router {
 
 
 	public static function render_http_status( $status = HttpStatus::HTTP_404 ){
-		header("HTTP/1.0 {$status['status']} " . $status['statusText']);
-		header("Status: {$status['status']} " . $status['statusText'] );
+		//header("HTTP/1.0 {$status['status']} " . $status['statusText']);
+		//header("Status: {$status['status']} " . $status['statusText'] );
 		
 		$view = new View( $GLOBALS['CREATIVE']['request'] , new Acl() );
-		$view->theme( BACKEND );
-		$view->render_error($status['status']);
+		$view->render( '_http_.'.$status['status']);
 		exit;
 	}
 	
