@@ -11,7 +11,7 @@
 <section class="sidebar">
 	<div class="user-panel" style="min-height: 60px">
 		<div class="pull-left image">
-			<img id="user_img_menu" src="{$theme.images|cat:'user.backend.png'}" class="user-image img-circle" alt="" style="background-color: #fff">
+			<img id="user_img_menu" src="{$theme.img|cat:'user.backend.png'}" class="user-image img-circle" alt="" style="background-color: #fff">
 		</div>
 		<div class="info">
 			<p style="margin-top: 4px;margin-bottom: 1px;">{$backend.profile_name}</p>

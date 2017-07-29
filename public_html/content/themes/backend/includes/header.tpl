@@ -27,13 +27,13 @@
                         <!-- User Account: style can be found in dropdown.less -->
                         <li class="dropdown user user-menu">
                             <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                                <img src="{$theme.images|cat:'user.backend.png'}" class="user-image img-circle" alt="" style="background-color: #fff">
+                                <img src="{$theme.img|cat:'user.backend.png'}" class="user-image img-circle" alt="" style="background-color: #fff">
                                 <span class="hidden-xs">{$backend.description|upper}&ensp;</span>
                             </a>
                             <ul class="dropdown-menu">
                                 <!-- User image -->
                                 <li class="user-header">
-                                    <img src="{$theme.images|cat:'user.backend.png'}" class="img-circle" alt="" style="background-color: #fff">
+                                    <img src="{$theme.img|cat:'user.backend.png'}" class="img-circle" alt="" style="background-color: #fff">
 
                                     <p>
                                         {$backend.description|upper}
