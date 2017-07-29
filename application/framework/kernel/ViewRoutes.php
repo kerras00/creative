@@ -3,14 +3,14 @@
 
 abstract class ViewRoutes {
 	
- 	static function run( $theme_active, $controller, $module ){
+ 	static function get( $theme, $controller, $module ){
  		$routes = array();
  		
-		if( $module ){
+		/*if( $module ){
 			$routes['view'] = PATH_MODULES . $module .DS. 'views' .DS. $controller .DS;		
 		} else {
 			$routes['view'] = PATH_VIEWS . $controller .DS;
-		}
+		}*/
 		
 		$routes['brand'] = array(
 			'url'		=> '/content/brand/' ,
@@ -28,6 +28,19 @@ abstract class ViewRoutes {
 			'components'=> '/assets/components/',
 		);
 		
+		$routes['theme']= array(
+			'path'	=> PATH_CONTENT . 'themes' .DS. $theme  .DS,
+			'url'	=> '/content/themes/' . $theme ,
+			'js' 	=> '/content/themes/' . $theme . '/js/',
+			'css' 	=> '/content/themes/' . $theme . '/css/',	
+			'img' 	=> '/content/themes/' . $theme . '/images/',
+			'plugins'=> '/content/themes/' . $theme . '/plugins/',
+		);
+
+		return $routes;
+
+
+
 		$routes['theme']['backend'] = array(
 			'path'		=> PATH_CONTENT . 'backend' .DS ,
 			'url'		=> '/content/themes/backend/' ,
@@ -46,7 +59,7 @@ abstract class ViewRoutes {
 			'images' 	=> '/content/themes/' . $theme_active . '/images/',
 			'plugins' 	=> '/content/themes/' . $theme_active . '/plugins/',
 		);
-		return $routes;
+		
 	}
 	
 	
