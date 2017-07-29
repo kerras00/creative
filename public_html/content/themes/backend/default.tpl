@@ -190,10 +190,10 @@
             {include file=$theme.dir|cat:'includes/breadcrumbs.tpl'} 
         {/if} 
 
-        {if strpos($_html , ".tpl") == true } 
-            {include file=$_html nocache} 
+        {if strpos($view_html , ".tpl") == true } 
+            {include file=$view_html nocache} 
         {else}
-            {$_html} 
+            {$view_html} 
         {/if}
 
         {if isset($echo) && count($echo)} 

@@ -25,15 +25,10 @@ class accountsController extends Controller {
 	 * @return void
 	 */
 	public function auth( $ambit = NULL) {
-
-		//App::set_locale('es');
-
 		$this->view->assign( 'ambit', $ambit );
 				
-		$this->view->theme( BACKEND );
-		$this->view->ambit( BACKEND );
-					
-		$this->view->template( 'auth' );
+		$this->view->theme( BACKEND );					
+		$this->view->template( 'auth' );		
 		$this->view->render( __FUNCTION__ );
 	}
 

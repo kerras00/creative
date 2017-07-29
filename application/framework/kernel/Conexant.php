@@ -10,7 +10,7 @@ define('DB_DRIVER_PGSQL', 'pgsql');
 * Esta clase permite crear conexiones con MySQL y hacer consultas a base de datos
 */
 class Conexant {
-	
+
 	const 
 		DNS_MYSQL = 'mysql:dbname=@dbname;host=@host;port=@port;charset=@charset',
 		DNS_MSSQL = 'sqlsrv:Server=@host;Database=@dbname;ConnectionPooling=0',
@@ -37,6 +37,7 @@ class Conexant {
 			//PDO::MYSQL_ATTR_INIT_COMMAND 	=> "SET NAMES utf8"
 	    );
     
+	
     /**
 	* 
 	* 
@@ -99,7 +100,7 @@ class Conexant {
 					$this->connection = new PDO($dsn, $this->DB_USER, $this->DB_PASSWORD);
 				break;
 				
-				default :
+				case DB_DRIVER_MYSQL:
 					$dsn = str_ireplace(
 						array('@dbname', '@host','@port', '@charset'),
 						array($this->DB_DATABASE, $this->DB_HOST, $this->DB_PORT, $this->DB_COLLATE),
@@ -107,13 +108,17 @@ class Conexant {
 					);
 					$this->connection = new PDO($dsn, $this->DB_USER, $this->DB_PASSWORD, $this->options);
 				break;
+
+				default :
+					ErrorHandler::run_exception('DRIVER DATABASE Not support');
+				break;
 			}
 			
 			$this->conected = TRUE;
 			return $this->conected;
 		} catch (PDOException $ex) {
 						
-			error_log($ex->getMessage());
+			//error_log($ex->getMessage());
 						
 			if( ENVIRONMENT == 'development' ){
 				
@@ -133,7 +138,7 @@ class Conexant {
 				$add .= '<strong>Collate:</strong> '.$this->DB_COLLATE.'<br/><br/>';
 				
 				$out = '<strong>Directory Module: </strong>'. $dirModulo ;
-				CreativeBase::run_exception('Module not found', $out, $add);
+				ErrorHandler::run_exception('Failed Connection'. $out. $add);
 					
 				
 			} else {
@@ -193,26 +198,39 @@ class Conexant {
 	* 
 	* @return
 	*/
-	public function query( $query ) {
-  	
-		if (!$this->connection) {
-			$this->open( $this->DB_USER, $this->DB_PASSWORD, $this->DB_HOST, $this->DB_DATABASE );
-		}
+
+
+	/** 
+	 * TODO: Revisar
+	 * -----------------------------------------------------------------------
+	 * Query
+	 * ------------------------------------------------------------------------
+	 * Execute an SQL statement, returning a result set as a PDOStatement object
+	 * 
+	 * @category Controllers
+	 * @version 1.0.0
+	 * @author name <name@email.com>
+	 */
+	public function query( $query ) {	
+	
+		if ( !$this->conected ) {
+	        $this->open( $this->DB_USER, $this->DB_PASSWORD, $this->DB_DATABASE, $this->DB_HOST );
+	    }
 
 		try {
 			$std = $this->connection->query($query);
 			return $std;
 		} catch (Exception $ex) {
-			
-			$out = $ex->getMessage().'<br/>';
-			CreativeBase::run_exception('Error in Query not found', $out);
-					
-					
-			//echo '<strong>Error [query]: </strong> '.$ex->getMessage().'<br/>';
-			//echo '<strong>Query: </strong> '.$query.'<br/>';
+			ErrorHandler::error('Error in Query not found: ' . $ex->getMessage().'<br/>');
 			return FALSE;
 		}
 	}
+
+
+
+
+
+
 
 	protected $stmt;
 	public function single($query, $params = null){
@@ -250,10 +268,10 @@ class Conexant {
 	* 
 	* @return
 	*/
-    private function preformat_query( $query ){
+    private function format_before( $query ){
 		return 
 			trim(
-				str_replace(
+				str_ireplace(
 					array(
 						chr(13).chr(10),
 						"\r\n",
@@ -261,7 +279,8 @@ class Conexant {
 						"\r",
 						"\t"
 					),
-					array("", "", "", "", " "), $query)
+					array("", "", "", "", " "),
+					$query)
 			);
 	}
     
@@ -276,32 +295,48 @@ class Conexant {
 	* 
 	* @return mixed
 	*/
-	public function execute( $query, $params = array(), $fetchmode = PDO::FETCH_ASSOC ) {
+
+	/**
+	 * ----------------------------------------------------------------------------
+	 * Execute SQL Query
+	 * ----------------------------------------------------------------------------
+	 * It executes a prepared SQL statement, returning a result set as an 
+	 * indexed array either by column name, or numerically with base index 0 
+	 * as returned in the result set.
+	 * 
+	 * Ejecuta una sentencia SQL preparada, devolviendo un conjunto de 
+	 * resultados como un array indexado tanto por nombre de columna, 
+	 * como numéricamente con índice de base 0 tal como fue devuelto en 
+	 * el conjunto de resultados.
+	 * 
+	 * @param string $query
+	 * @param array $params
+	 * @return void
+	 */
+	public function execute( $query, $params = array() ) {
 		$result = NULL;
 		
 	  	if ( !$this->conected ) {
 	        $this->open( $this->DB_USER, $this->DB_PASSWORD, $this->DB_DATABASE, $this->DB_HOST );
-	    }
-	    
-	    $_query = $query;
-    	$query = $this->preformat_query($query);
+	    }	    
+
+    	$query_formated = $this->format_before($query);
 		
-    	try {
-    		
-			if ( ($this->stmt = $this->connection->prepare($query)) ) {
+    	try {    		
+			if ( ($this->stmt = $this->connection->prepare($query_formated)) ) {
 				
 				if ( !$this->stmt->execute( $params ) ) {
 					$result = $this->stmt->errorInfo();
-					print_r($this->stmt->errorInfo());
-					return $result;
+					ErrorHandler::error($result);
+					return array();
 				}
-				if( stripos($query, 'select') !==FALSE OR stripos($query, 'show') !==FALSE){
-					$result = $this->stmt->fetchAll( $fetchmode );
-				}
+
+				//if( stripos($query, 'select') !==FALSE OR stripos($query, 'show') !==FALSE){
+				$result = $this->stmt->fetchAll( PDO::FETCH_ASSOC );
+				//}
 				
 				$this->stmt->closeCursor();
 			}
-
 		} catch(PDOException $ex){
 			
 			$out  = '<strong style="color:red">'.$ex->getMessage().'</strong><br/>';
