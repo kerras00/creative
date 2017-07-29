@@ -15,25 +15,69 @@ class View extends SmartyBC
 {
 
 	private 
-		$http_meta,
-		$_request,
-		$_js,
-		$_css,
-		$_route;
+		$http_meta
 
-	private $_module;
-	private $_includes;
-	private $_controller;
-	private $_page;
-	private $_acl;
-	
-	private $_template 	= 'template';
-	private $_ambit 	= 'frontend';
-	private $_compress 	= FALSE;
-	private $_theme_active;
-	
-	private $_theme;
+		/**
+		 * ---------------------------------------------------
+		 * @var Request URL Request
+		 * ---------------------------------------------------
+		 */
+		, $_request
 
+		/**
+		 * ---------------------------------------------------
+		 * @var Acl Access Control List
+		 * ---------------------------------------------------
+		 */
+		, $_acl
+
+		/**
+		 * ---------------------------------------------------
+		 * @var array Routes the Files and directories
+		 * ----------------------------------------------------
+		 */
+		, $_route
+
+		/**
+		 * ---------------------------------------------------
+		 * @var string Theme
+		 * ---------------------------------------------------
+		 */
+		, $_theme
+
+		/** 
+		 * ---------------------------------------------------
+		 * @var string Template
+		 * ----------------------------------------------------
+		 */
+		, $_template 	= 'template'
+		//, $_ambit 		= 'frontend'
+
+		/**
+		 * ---------------------------------------------------
+		 * @var boolean Establishes whether the content of 
+		 * the view (HTML, CSS, JavaScript) is compressed 
+		 * to minimize the resulting code
+		 * ---------------------------------------------------
+		 */
+		, $_compress 	= FALSE
+
+		, $_use_angular = FALSE
+		, $_module
+		, $_controller
+		
+		, $_page
+		, $_js
+		, $_css;
+
+	/**
+	 * ---------------------------------------------------
+	 * View Constructor
+	 * ---------------------------------------------------
+	 *
+	 * @param Request $request URL Request
+	 * @param Acl $acl Acl Access Control List
+	 */
 	public function __construct( Request $request, Acl $acl ) {	
 		parent::__construct();
 		
@@ -49,14 +93,11 @@ class View extends SmartyBC
 		$this->_theme = DEFAULT_THEME;
 		
 		//$this->_includes = PATH_THEMES . $theme_active .DS. 'includes' .DS;
-		
-		$this->_module			= $this->_request->get_module();		
-		$this->_controller 		= $this->_request->get_controller();				
-		$this->_route 			= ViewRoutes::run($this->_theme, $this->_controller, $this->_module);		
+	
 		
 		$this->_route['module']	= $this->_module;
 		$this->assign('acl'	, $acl);
-		$this->assign('token'	, '');
+		$this->assign('token' , '');
 	}// END: __construct
 	
 	
@@ -82,18 +123,7 @@ class View extends SmartyBC
 		$this->_template = strtolower($template);
 		return $this;
 	}
-
-
-	/**
-	 * Undocumented function
-	 *
-	 * @param string $ambit
-	 * @return void
-	 */
-	public function ambit( $ambit ){
-		$this->_ambit 	= strtolower($ambit);
-		return $this;
-	}
+	
 
 /**
 	 * Renderiza una vista (página)
@@ -103,76 +133,83 @@ class View extends SmartyBC
 	 * @param {Boolean} $item Item del menú que está activo (selected)
 	 * @return
 	 */
-	public function render($vista, $options = NULL, $callback = NULL) {
-		
-		$rutas 	= $this->_route;
-		$css	= $this->_css;
-		$js		= $this->_js;
 
+	/**
+	 * ----------------------------------------------------------------------------
+	 * Render Views
+	 * ----------------------------------------------------------------------------
+	 * Views contain the HTML served by your application, and serve as a 
+	 * convenient method of separating your controller and domain 
+	 * logic from your presentation logic. 
+	 * 
+	 * Las vistas contienen el HTML proporcionado por la aplicación y sirven 
+	 * como un método conveniente para separar la lógica del controlador y 
+	 * del dominio de la lógica de la presentación.
+	 * 
+	 * @param string $view
+	 * @param array $options
+	 * 
+	 * @return void
+	 */
 
-		if( $this->_ambit == BACKEND ){
-			$template_dir = PATH_CONTENT . 'themes' .DS. 'backend' . DS;
-			$theme = $rutas['theme']['backend'];
+	public function render($view, $options = NULL) {
+
+		$this->_module		= $this->_request->get_module();
+		$this->_controller 	= $this->_request->get_controller();
+		$this->_route 		= ViewRoutes::get($this->_theme, $this->_controller, $this->_module);	
+
+		if( $module ){
+			$path_base_view = PATH_MODULES . $module .DS. 'views' .DS. $this->_controller .DS;		
 		} else {
-			$template_dir = PATH_CONTENT . 'themes' .DS. $this->_theme . DS;
-			$theme = $rutas['theme']['frontend'];
+			$path_base_view = PATH_VIEWS . $this->_controller .DS;	
 		}
-		
-		
-		$this->template_dir = $template_dir;
-		$this->config_dir 	= PATH_CONTENT . 'themes' .DS. $this->_template . DS . 'config' . DS;
-		$this->compile_dir 	= PATH_TEMPORAL . 'templates_c' . DS;
-    	$this->cache_dir 	= PATH_TEMPORAL . 'cache' . DS;
 
-        /*if( ENVIRONMENT == 'development' )
-			$this->debugging = TRUE;	*/
-		
-			
-		if( strpos($vista, '/') === false ){
-			$vista		= $vista ? $vista : DEFAULT_VIEW;
-			$path_view	= $rutas['view'] . $vista . '.tpl';
+		if( strpos($view, '.') !== FALSE ){
+			$arr = explode('.', $view);
+			$path_view = PATH_VIEWS. $arr[0] .DS. $arr[1]. '.tpl';
 		} else {
-			$vista		= $vista ? $vista : DEFAULT_VIEW;
-			$path_view 	= PATH_VIEWS . $vista . '.tpl';
+			$path_view 	= $path_base_view . $view . '.tpl';
 		}
-		
 
+		
 		
 		#Verificar que el archivo exista y se pueda leer
 		if (is_readable($path_view)) {
-			$this->assign('_html', $path_view);
+			$this->assign('view_html', $path_view);
 		} else {
 			ErrorHandler::run_exception( 'View Not Found: [' . $path_view. ']' );
 		}
-		
-		
-		
-		$this->assign('uploads'		, $rutas['uploads']);
-		$this->assign('brand'		, $rutas['brand']);
-		$this->assign('favicon'		, $rutas['brand']['favicon']);
-		$this->assign('lang'		, DEFAULT_LANG);		
-		$this->assign('theme'		, $theme);
-		$this->assign('assets'		, $rutas['assets']);
-		$this->assign('angular'		, false);
-		$this->assign('echo'		, $GLOBALS['CREATIVE']['echo']);
-		$this->assign('app'			, $GLOBALS['CREATIVE']['CONF']['app']);
 
-		$this->assign('breadcrumbs'	, false);
+
+
+		$this->template_dir = $this->_route['theme']['path'];
+		$this->config_dir 	= PATH_TEMPORAL . 'configs';
+		$this->compile_dir 	= PATH_TEMPORAL . 'templates_c' . DS;
+    	$this->cache_dir 	= PATH_TEMPORAL . 'cache' . DS;
+		
+		$this->assign('theme'		, $this->_route['theme']);
+		$this->assign('assets'		, $this->_route['assets']);
+		$this->assign('brand'		, $this->_route['brand']);
+		$this->assign('uploads'		, $this->_route['uploads']);
+		$this->assign('angular'		, $this->_use_angular);
+		//$this->assign('echo'		, $GLOBALS['CREATIVE']['echo']);
+		//$this->assign('app'			, $GLOBALS['CREATIVE']['CONF']['app']);
+
+		//$this->assign('breadcrumbs'	, false);
 		/**$this->assign('menus'	, array(
 			'category' 	=> Creative::get( 'Menus' )->get_category(),
 			'menus'		=> Creative::get( 'Menus' )->get_menu()
 		));
 		*/
 		
-		if( $this->_compress ) $this->init_compress();
-		
-		$this->display($this->_template.'.tpl');
-		
-		if( $callback ) $callback();
-		
-		if( $this->_compress ) $this->end_compress();
-		
-			
+		if( $this->_compress ){
+			$this->init_compress();
+			$this->display($this->_template.'.tpl');
+			if( $this->_compress ) $this->end_compress();
+		} else {
+			$this->display($this->_template.'.tpl');
+		}
+
     }
 	
 	
