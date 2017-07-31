@@ -36,7 +36,9 @@ abstract class Lang
         }
 
         if( is_array($msg) ){
-            $msg = $msg[$arr[1]];
+            if( $file == 'default' )
+                $msg = $msg[$arr[1]];
+            else $msg = $msg[$arr[2]];
         }
 
         //Pluralización
