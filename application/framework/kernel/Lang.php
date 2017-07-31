@@ -12,59 +12,71 @@ abstract class Lang
      */
     public static function get($message, $option = NULL, $other = NULL)
     {
-        $msg = '';
-        if( strpos($message,'.') !== FALSE ){
-            $arr = explode('.', $message);
-            $file = $arr[0];
-            $message = $arr[1];
+        $path_lang = PATH_APP .DS. 'langs' .DS. self::$lang_active .DS;
 
-            $file = $file == '' ? 'default' : $file ;
+        $patterns = explode('.', $message);
 
-            if( file_exists(PATH_APP .DS. 'langs' .DS. self::$lang_active .DS. $file.'.php') ){
-                $messages = include PATH_APP . 'langs' .DS. self::$lang_active .DS. $file.'.php';
-                $msg = $messages[$message];
-            } else {
-                $messages = include PATH_APP . 'langs' .DS. self::$lang_active .DS. 'default.php';
-                $msg = $messages[$arr[0]];
-            };
+        //array|string in lang.php
+        if ( count($patterns) > 1 AND file_exists( $path_lang . $patterns[0].'.php') ){
+           
+            $content = include $path_lang . $patterns[0].'.php';
+            $taken = $content[$patterns[1]]; //array|string
+            
+            if( is_array($taken) ){
+                $taken = $taken[$patterns[2]];
+            }
+
+        //array|string in default
+        } elseif ( count($patterns) > 1 AND !file_exists( $path_lang . $patterns[0].'.php') ){
+
+            $content = include $path_lang . 'default.php';
+            $taken = $content[$patterns[0]]; //array|string
+
+            if( is_array($taken) ){
+                $taken = $taken[$patterns[1]];
+            }
             
         } else {
-            if( file_exists(PATH_APP .DS. 'langs' .DS. self::$lang_active .DS. 'default.php') ){
-                $messages = include PATH_APP .DS. 'langs' .DS. self::$lang_active .DS. 'default.php';
-                $msg = $messages[$message];
-            } else return '';            
+            $content = include $path_lang . 'default.php';
+            $taken = $content[$message]; //string
         }
 
-        if( is_array($msg) ){
-            if( $file == 'default' )
-                $msg = $msg[$arr[1]];
-            else $msg = $msg[$arr[2]];
+        if( is_string($taken) ){
+            return self::process($taken , $option, $other);
+        } else {
+            $taken = $taken[$patterns[2]];
+            return self::process($taken , $option, $other);
         }
 
+
+        
+    }
+
+    static function process( $taken, $option = NULL, $other = NULL )
+    {
         //Pluralización
-        if( strpos($msg,'|') !== FALSE ){
+        if( strpos($taken,'|') !== FALSE ){
             if( is_numeric($option) ){
                 if( $option <= 1 ){
-                    $msg = explode('|', $msg)[0];
+                    $taken = explode('|', $taken)[0];
                 } else {
-                    $msg = explode('|', $msg)[1];
+                    $taken = explode('|', $taken)[1];
                 }
             } else{
-                $msg = explode('|', $msg)[0];
+                $taken = explode('|', $taken)[0];
             }
         }
 
         //Reemplazo de texto
         if( is_array($option) ){
             foreach ($option as $key => $value) {
-                $msg = substr( ':'.$key, $value, $msg );
+                $taken = substr( ':'.$key, $value, $taken );
             }
         } elseif( is_numeric($option) ){
-            $msg = str_ireplace( '{0}', $option, $msg );
+            $taken = str_ireplace( '{0}', $option, $taken );
         }       
 
-        return $msg;
-        
+        return $taken;
     }
 
     /**
