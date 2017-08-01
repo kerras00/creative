@@ -6,7 +6,7 @@
 */
 function editrecord_handler( id ){
 	
-	title = "{text} - <small>Editar registro</small>";
+	title = ":text - <small>Editar registro</small>";
 	
 	//Inicializar los valores por defecto
 	$("#id").val(id);

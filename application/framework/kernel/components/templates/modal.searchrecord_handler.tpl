@@ -15,7 +15,7 @@ function searchrecord_handler(){
 		value  = $("#search").val();
 	
 	$.ajax({
-		url : "{controller_load}search/" + filter + "/" + value,
+		url : ":controller_load/search/" + filter + "/" + value,
 	    beforeSend: function( e ) {
 			$.isLoading({ text: "Procesando..." });
 		},

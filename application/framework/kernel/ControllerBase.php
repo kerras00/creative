@@ -19,13 +19,12 @@ abstract class ControllerBase
         $storage,
         $module;
 	
-	public function __construct( $class ) {		
+	public function __construct() {		
 
 		$storage 			= new \SplObjectStorage();
 
 		$this->controller 	= $class;
 		$this->request		= $GLOBALS['CREATIVE']['request'];
-		$this->registry 	= Registry::get_instancia();
 		$this->acl 			= new Acl();
 		
 		$this->view = new View( $this->request, $this->acl );

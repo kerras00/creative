@@ -1,3 +1,119 @@
+a {
+    color: #3c8dbc;
+}
+
+a:hover,
+a:active,
+a:focus {
+    outline: none;
+    text-decoration: none;
+    color: #72afd2;
+}
+
+
+
+/** 
+ * -----------------------------------------------------------------------
+ * Content Wrapper
+ * Fondo de la app
+ * ------------------------------------------------------------------------
+ */
+.content-wrapper,
+.right-side {
+    min-height: 100%;
+    background-color: #eeeeee;
+    z-index: 800;
+}
+
+
+/** 
+ * -----------------------------------------------------------------------
+ * Sidebar
+ * ------------------------------------------------------------------------
+ */
+.main-sidebar,
+.left-side {
+    background: #2c2e2f;
+    position: absolute;
+    top: 0;
+    left: 0;
+    padding-top: 80px;
+    min-height: 100%;
+    width: 230px;
+    z-index: 810;
+    -webkit-transition: -webkit-transform 0.3s ease-in-out, width 0.3s ease-in-out;
+    -moz-transition: -moz-transform 0.3s ease-in-out, width 0.3s ease-in-out;
+    -o-transition: -o-transform 0.3s ease-in-out, width 0.3s ease-in-out;
+    transition: transform 0.3s ease-in-out, width 0.3s ease-in-out;
+}
+
+
+/** 
+ * -----------------------------------------------------------------------
+ * Sidebar Items
+ * ------------------------------------------------------------------------
+ */
+
+/* Main Header */
+
+.main-header .navbar .nav > li > a:hover,
+.main-header .navbar .nav > li > a:active,
+.main-header .navbar .nav > li > a:focus,
+.main-header .navbar .nav .open > a,
+.main-header .navbar .nav .open > a:hover,
+.main-header .navbar .nav .open > a:focus,
+.main-header .navbar .nav > .active > a {
+  color: #444;
+}
+
+@media (max-width: 767px) {
+  .main-header .navbar .dropdown-menu li.divider {
+    background-color: rgba(255, 255, 255, 0.1);
+  }
+  .main-header .navbar .dropdown-menu li a {
+    color: #fff;
+  }
+  .main-header .navbar .dropdown-menu li a:hover {
+    background: #00b3df;
+  }
+}
+
+/*Header*/
+.sidebar-menu > li > a {
+  border-left: 3px solid transparent;
+}
+
+.sidebar-menu > li > a,
+.sidebar-menu > li > a {
+  color: #979898;
+  background: #2c2e2f;
+}
+
+.treeview-menu > li.active > a,
+.sidebar>.sidebar-menu>li:hover>a,
+.sidebar>.sidebar-menu>li.active>a {
+    color: #fff !important;
+    background: #303435;
+    /*border-left-color: #62696d;*/
+}
+
+.sidebar-menu > li > .treeview-menu {
+  background: #303435;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 .toast-item p strong{
 	text-transform: uppercase;
@@ -7,15 +123,6 @@
 .form-group {
     margin-bottom: 10px;
 }
-
-
-.sidebar-menu .treeview-menu > li > a {
-    padding: 8px 5px 8px 15px;
-    display: block;
-    font-size: 14px;
-    font-weight: 300;
-}
-
 
 
 

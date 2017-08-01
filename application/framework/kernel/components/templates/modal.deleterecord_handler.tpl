@@ -5,16 +5,16 @@
 */
 function deleterecord_handler(id){
 	bootbox.confirm({
-	    title: "<span style=\"text-transform: uppercase;\">{text} - <small>Eliminar registro</small></span>",
+	    title: "<span style=\"text-transform: uppercase;\">:text - <small>{Lang::get('dashboard.info.delete')}</small></span>",
 	    size: "small",
-	    message: "¿Está seguro(a) que quiere eliminar este registro?",
+	    message: "{Lang::get('dashboard.actions.delete_confir')}",
 	    buttons: {
 	        cancel: {
-	            label: '<i class="fa fa-times"></i> Cancelar',
+	            label: '<i class="fa fa-times"></i> {Lang::get("cancel")}',
 	            className: "btn-danger"
 	        },
 	        confirm: {
-	            label: '<i class="fa fa-check"></i> Confirmar',
+	            label: '<i class="fa fa-check"></i> {Lang::get("confir")}',
 	            className: "btn-success"
 	        }
 	    },
@@ -28,11 +28,11 @@ function deleterecord_handler(id){
 
 function deleterecord_callback( id ){
 	$.ajax({
-		url : "{controller_delete}" + id,
+		url : ":controller_delete" + id,
 		type : "DELETE",
 		dataType: "JSON",
 		beforeSend: function( e ) {
-			$.isLoading({ text: "Procesando..." });
+			$.loading({ text: "{Lang::get('processing')}..." });
 		}
 	}).done(function( data ) {
 		$("#tr_" + id).addClass("delete_success");
@@ -41,7 +41,7 @@ function deleterecord_callback( id ){
 				_dt_data.row("#tr_"+id).remove().draw( false );
 			}, 1100);
 		}
-		$.isLoading("hide");
+		$.loading("hide");
 	});
 }
 </script>

@@ -62,6 +62,7 @@ class Model {
 	
 	public function change_pk( $pk ){
 		$this->pk = $pk;
+		return $this;
 	}
 	
 	

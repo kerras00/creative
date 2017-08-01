@@ -1,0 +1,37 @@
+.loading-wrapper.loading-right{margin-left:10px;}
+.loading-overlay{
+	position:relative;
+	text-align:center;
+	z-index: 999999999;
+	animation-name: keyf-loading-overlay;
+	animation-duration: 0.5s;
+}
+@keyframes keyf-loading-overlay {
+    0%   { background:rgba(0,0,0,0.0); }
+    100%  { background:rgba(0,0,0,0.7); }
+}
+
+
+.loading-overlay .loading-wrapper{
+	background:rgba(0,0,0,0.8);
+	-webkit-border-radius:7px;
+	-webkit-background-clip:padding-box;
+	-moz-border-radius:7px;
+	-moz-background-clip:padding;
+	border-radius:5px;
+	background-clip:padding-box;
+	display:inline-block;
+	margin:0 auto;
+	padding:20px 50px;
+	top:10%;
+	z-index:90000;
+	font-size: 14px;
+	border: 1px #333 solid;
+	color:#fff;
+	animation-name: keyf-loading-wrapper;
+	animation-duration: 1.5s;
+}
+@keyframes keyf-loading-wrapper {
+    0%   { background:rgba(0,0,0,0.0); }
+    100%  { background:rgba(0,0,0,0.8); }
+}

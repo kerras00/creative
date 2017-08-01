@@ -32,10 +32,6 @@ spl_autoload_register('autoload_handlers');
 
 
 /**
- * Función de autoload
- * Se utiliza para incluir Libreías
- * @param $file string el Nombre de la clase
- */ 
 function autoload_libs( $file ){ 
 	if(file_exists(PATH_LIBS . $file .DS. strtolower($file).'.php')){
         include_once PATH_LIBS . $file .DS. strtolower($file). '.php';
@@ -45,7 +41,7 @@ function autoload_libs( $file ){
     }
 }
 spl_autoload_register("autoload_libs");
-
+ */ 
 
 
 

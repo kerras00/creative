@@ -1,4 +1,4 @@
-{include file="includes/datatable.back.tpl" 
+{include file="includes/data.table.tpl" 
 	data=$data 
 	table=$table}
 
@@ -29,14 +29,14 @@
 						<table id="table_permissions" class="table display" cellspacing="0" width="100%">
 							<thead>
 							    <tr>
-							    	<th>Campo</th>
-							    	<th class="text-center"><span class="fa fa-cog"></span> <span class="hidden-xs">Acceso</span></th>
+							    	<th>{Lang::get('dashboard.field')}</th>
+							    	<th class="text-center"><span class="fa fa-cog"></span> {Lang::get('dashboard.access')}</th>
 							    </tr>
 							</thead>
 							<tfoot>
 							     <tr>
-							    	<th>Campo</th>
-							    	<th class="text-center"><span class="fa fa-cog"></span> <span class="hidden-xs">Acceso</span></th>
+							    	<th>{Lang::get('dashboard.field')}</th>
+							    	<th class="text-center"><span class="fa fa-cog"></span> {Lang::get('dashboard.access')}</th>
 							    </tr>
 							</tfoot>
 						    <tbody>
@@ -49,7 +49,7 @@
 			<!-- Modal Footer -->
 			<div class="modal-footer">
 				<!--<button class="btn btn-danger pull-left" data-dismiss="modal"><span class="fa fa-ban"></span> Cerrar</button>-->
-				<button id="modal_custom_submit" data-dismiss="modal" type="button" class="btn btn-success"><span class="fa fa-check"></span> Aceptar</button>
+				<button id="modal_custom_submit" data-dismiss="modal" type="button" class="btn btn-success"><span class="fa fa-check"></span> {Lang::get('accept')}</button>
 			</div>
 		</div>
 	</div>
@@ -57,30 +57,37 @@
 
 <script>
 
-
+/**
+ * 
+ */
 function addrecord_callback(){
-	//$('#default_module').val( $('.read:first').data('module') ).change();
+	$('#read-dashboard').prop('checked',1).prop('disabled',1);
     $('#id').val(-1);
 	modules = $.extend(true, {}, modules_intitialize);
 }
 
-var modules = {
-{foreach $fields_db as $key => $value}
-	{$key} : {
-	{foreach $value as $key_2 => $value_2}{if $value_2["Key"]!='PRI' AND $value_2["Field"]!='created'}
-	{$value_2["Field"]} : {
-			label : '{$value_2["label"]|capitalize}',
-			access : 0
-		},
-	{/if}{/foreach}},
-{/foreach}}
+var modules = {Registry::get_json()};
+$.each(modules, function(module_name, module_attr){
+	if( module_attr.rules ){
+		$.each(module_attr.rules, function(rule_name, rule_attr){
+			modules[module_name]['rules'][rule_name] = {
+				text : rule_attr,
+				access : 0
+			};
+		});
+	}
+});
 var modules_intitialize = $.extend(true, {}, modules);
 
-function customize( id ){
+/**
+ * 
+ */
+function customize_handler( id ){
 	
-	if( typeof modules[id] === "undefined"  ){
+	if( typeof modules[id] === "undefined" ){
 		messagebox('Personalizar Módulo', 'No se permite configurar este módulo');
 		$('body').addClass('modal-open');
+
 	} else {
 		
 		$("#modal_custom").modal('show');
@@ -88,24 +95,28 @@ function customize( id ){
 			.css("z-index", parseInt($('#modal_wiewrecord').css('z-index')) + 100)
 			.css("paddingTop", '25px');
 		
-		$('#modal_custom_title').html(id + ' - <small>Personalizar</small>');
+		$('#modal_custom_title').html(modules[id]['text'] + " - <small>{Lang::get('dashboard.customize')}</small>");
 		
 		$('#table_permissions tbody').html('');
 		
-		$.each(modules[id], function(index, item){
-			var field = '<td align="left">@text</td>'.replace('@text', item['label']);
-			var action = '<td align="center">'+
-				'<select id="access_'+index+'" data-field="'+index+'" data-module="' +id+ '" class="form-control access_field" style="width: 100%;">'+
-					'<option value="1">Si</option>'+
-					'<option value="2">Solo vista</option>'+
-					'<option value="0" selected>Oculto</option>'+
-				'</select>'+
-			'</td> <td><span id="label-'+index+'" class="fa fa-circle" style="margin-top:10px;color:#dd4b39"></span></td>';	
-			$('#table_permissions').append('<tr>'+field + action+'</tr>');
-			$('#access_' + index).val(item['access']).change();
-			$('#access_' + index).on("change", save_access);
-		});
-		
+		if( modules[id].rules ){
+		 	$.each(modules[id].rules, function(index, item){
+				var field = '<td align="left" style="padding-top: 8px !important;">:text</td>'.replace(':text', item['text']);
+				var action = '<td align="center">'+
+								'<select id="access_'+index+'" data-field="'+index+'" data-module="'+id+'" class="form-control access_field" style="width: 100%;">'+
+									"<option value=\"1\">{Lang::get('yes')}</option>"+
+									"<option value=\"2\">{Lang::get('readonly')}</option>"+
+									"<option value=\"0\" selected>{Lang::get('hidden')}</option>"+
+								'</select>'+
+							'</td>'+
+							'<td>'+
+								'<span id="label-'+index+'" class="fa fa-circle" style="margin-top:10px;color:#dd4b39"></span>'+
+							'</td>';	
+				$('#table_permissions').append('<tr>'+field + action+'</tr>');
+				$('#access_' + index).on("change", save_access);
+				$('#access_' + index).val(item['access']).change();
+			});			
+		}
 	}
 	
 };
@@ -116,7 +127,7 @@ function save_access(){
 	var modulo = base.data('module');
 	var field = base.data('field');
 	var val = base.val();
-	modules[modulo][field]['access'] = val;
+	modules[modulo]['rules'][field]['access'] = val;
 	$('#read-'+modulo).prop('checked',1);
 		switch( val ){
 		case '0': color = '#dd4b39'; break;
@@ -152,7 +163,7 @@ function saverecord_handler( e ){
 			status 			: $("#status").val()
 		},
 		action 			= "insert",
-		ajax_url 		= "/api/v1/{$module}.json/";
+		ajax_url 		= "/api/v1/users.json/?tokenurl=" + ex.guid();
 	
 	//Nuevo Registro
 	if( data.id <= "-1" ){
@@ -181,34 +192,32 @@ function saverecord_handler( e ){
 	$.ajax({
 		url : ajax_url,
 		data : data,
-	    beforeSend: function( e ) {
-			$.isLoading({ text: "Procesando..." });
-		},
 		type : ajax_type,		 
-		dataType : "json",		 
-		success : function(data) {
-			
-			$.isLoading( "hide" );
+		dataType : "json",
+	    beforeSend: function( e ) {
+			$.loading({ text: "{Lang::get('processing')}..." });
+		},
+		success : function(data) {	
+
+			$.loading( "hide" );
 			_token = data.token;
 			console.log(data.statusText);
-			
-			
 			//Unauthorized - Indica que el cliente debe estar autorizado primero antes de realizar operaciones con los recursos
 			if( data.status == 401 ){
-	    		notify(data.statusText, data.icon);
+	    		ex.notify(data.statusText, data.icon);
 	    		return false;
 	    	}
 	    	
 	    	//Unprocessable Entity - Parametros incorrectos
 			if( data.status == 422 ){
-	    		notify(data.statusText, data.icon);
-	    		$("#"+data.field).focus().parent().addClass("has-error");
+	    		ex.notify(data.statusText, data.icon);
+	    		$(data.field).focus().parent().addClass("has-error");
 	    		return false;
 	    	}
 	    	
 	    	//Internal Server Error
 	    	if( data.status == 500 ){
-	    		notify(data.statusText, data.icon);
+	    		ex.notify(data.statusText, data.icon);
 	    		return false;
 	    	}
 	    	
@@ -216,7 +225,7 @@ function saverecord_handler( e ){
 	    	if( data.status == 201 ){
 	    		
 				$("#modal_wiewrecord").modal("hide");
-				notify(data.statusText, data.icon);
+				ex.notify(data.statusText, data.icon);
 				edit_mode = false;
 				
 				if (action == "update"){
@@ -236,17 +245,17 @@ function saverecord_handler( e ){
 				
 				//Template de Estatus
 				columns[columns.length-1] = _template_status
-			        .replace("@status_text", data.data.status_text)
-			        .replace("@status_help", data.data.status_help)
-			        .replace("@status_class", data.data.status_class)
+			        .replace(":status_text", data.data.status_text)
+			        .replace(":status_help", data.data.status_info)
+			        .replace(":status_class", data.data.status_class)
 			    ;
 			    
 			    //Tempalte de Acciones
 			    columns.push(
 			        _template_action
-			        	.replace("@id", data.data.id) //View
-			        	.replace("@id", data.data.id) //Edit
-			        	.replace("@id", data.data.id) //Delete
+			        	.replace(":id", data.data.id) //View
+			        	.replace(":id", data.data.id) //Edit
+			        	.replace(":id", data.data.id) //Delete
 			    );
 				
 				var _row_node = _dt_data.row.add(columns).draw().node();
@@ -293,19 +302,19 @@ function loaddata_profile_handler( id ){
     if( id == -1 || id == null ) return false;
     
 	$.ajax({
-		url : "/api/v1/profiles.json/find/" + id,
+		url : "/api/v1/profiles.json/find/" + id + '?tokenurl='+ ex.guid(),
 		data : {
 			id 		: id,
 			token 	: _token,
 	    },
 	    beforeSend: function( e ) {
-			$.isLoading({ text: "Procesando..." });
+			$.loading({ text: "{Lang::get('processing')}..." });
 		},
 		type : "GET",		 
 		dataType : "json",		 
 		success : function(data) {
 			
-			$.isLoading( "hide" );			
+			$.loading( "hide" );			
 	    	if( data.status == 200 ){
 	    		
 	    		var permissions = data.data.permissions;
@@ -315,33 +324,34 @@ function loaddata_profile_handler( id ){
 	    		$('.permission').prop('checked', false);
 	    		
 	    		//Recorre los permisos
-	    		$.each(permissions, function( index_root, permiso ){
+	    		$.each(permissions, function( index_root, permission ){
 	    			
-	    			if( permiso.attr == 'permission-module' ){
-	    				var access = permiso.content.to_array(',');
+	    			if( permission.attr == 'permission-module' ){
+	    				var access = permission.content.toArray(',');
 		    			$.each(access, function( index, item ){
-		    				item = item.to_array(':');
-		    				var field = '#' + item[0]+ '-'+permiso.name;
+		    				item = item.toArray(':');
+		    				var field = '#' + item[0]+ '-'+permission.name;
 		    				var val = item[1]==1 ? true : false;
 		    				$(field).prop('checked',val);
 		    			});
 		    			
-	    			} else if( permiso.attr == 'permission-field' ){
-	    				var access = permiso.content.to_array(',');
+	    			} else if( permission.attr == 'permission-field' ){
+	    				var access = permission.content.toArray(',');
 	    				$.each(access, function( index, item ){
-		    				item = item.to_array(':');
-		    				
-		    				modules[permiso.name][item[0]].access = item[1];
+							item = item.toArray(':');
+
+							if( modules[permission.name] )				
+								if( modules[permission.name]['rules'] )
+									modules[permission.name]['rules'][item[0]].access = item[1];
 		    				
 		    			});
 	    			}
-		    			
-	    				    			
-	    		});
-	    		
+				});
+				
+	    		$('#read-dashboard').prop('checked',1).prop('disabled',1);
 				//_token = data.response.token;				
 			} else {					
-				notify(data.statusText, data.icon);
+				ex.notify(data.statusText, data.icon);
 			}				
 	    }
 	});
@@ -351,19 +361,19 @@ function loaddata_profile_handler( id ){
 function loaddata_handler( id ){
 	
 	$.ajax({
-		url : "/api/v1/{$module}.json/find/" + id,
+		url : "/api/v1/users.json/find/" + id,
 		data : {
 			id 		: id,
 			token 	: _token,
 	    },
 	    beforeSend: function( e ) {
-			$.isLoading({ text: "Procesando..." });
+			$.loading({ text: "{Lang::get('processing')}..." });
 		},
 		type : "GET",		 
 		dataType : "json",		 
 		success : function(data) {
 			
-			$.isLoading( "hide" );			
+			$.loading( "hide" );			
 	    	if( data.status == 200 ){
 	    		
 	    		var permissions = data.data.permissions;
@@ -383,33 +393,33 @@ function loaddata_handler( id ){
 	    		$("#profile_id").change(loaddata_profile_handler);
                 
 	    		//Recorre los permisos
-	    		$.each(permissions, function( index_root, permiso ){
+	    		$.each(permissions, function( index_root, permission ){
 	    			
-	    			if( permiso.attr == 'permission-module' ){
-	    				var access = permiso.content.to_array(',');
+	    			if( permission.attr == 'permission-module' ){
+	    				var access = permission.content.toArray(',');
 		    			$.each(access, function( index, item ){
-		    				item = item.to_array(':');
-		    				var field = '#' + item[0]+ '-'+permiso.name;
+		    				item = item.toArray(':');
+		    				var field = '#' + item[0]+ '-'+permission.name;
 		    				var val = item[1]==1 ? true : false;
 		    				$(field).prop('checked',val);
 		    			});
 		    			
-	    			} else if( permiso.attr == 'permission-field' ){
-	    				var access = permiso.content.to_array(',');
+	    			} else if( permission.attr == 'permission-field' ){
+	    				var access = permission.content.toArray(',');
 	    				$.each(access, function( index, item ){
-		    				item = item.to_array(':');
-		    				
-		    				modules[permiso.name][item[0]].access = item[1];
+							item = item.toArray(':');
+
+							if( modules[permission.name] )				
+								if( modules[permission.name]['rules'] )
+									modules[permission.name]['rules'][item[0]].access = item[1];
 		    				
 		    			});
 	    			}
-		    			
-	    				    			
-	    		});
+				});
 	    		
 				//_token = data.response.token;				
 			} else {					
-				notify(data.statusText, data.icon);
+				ex.notify(data.statusText, data.icon);
 			}				
 	    }
 	});
@@ -427,7 +437,7 @@ var _dt_sresult;
 function searchrecord_handler(){
 	
 	if( $("#search").val() == "" ){
-		notify("Debe ingresar un parametro de busqueda", "info");
+		ex.notify("Debe ingresar un parametro de busqueda", "info");
 		$("#search").focus();
 		return ;
 	}
@@ -438,9 +448,9 @@ function searchrecord_handler(){
 		value  = $("#search").val();
 	
 	$.ajax({
-		url : "/api/v1/{$module}.json/search/" + filter + "/" + value,
+		url : "/api/v1/users.json/search/" + filter + "/" + value + '?tokenurl=' + ex.guid(),
 	    beforeSend: function( e ) {
-			$.isLoading({ text: "Procesando..." });
+			$.loading({ text: "{Lang::get('processing')}..." });
 		},
 		type : "GET",
 		dataType : "json",		 
@@ -460,21 +470,20 @@ function searchrecord_handler(){
 							columns.push( item[val] );
 						}
 					});
-					
 						
 					//Template de Estatus
 					columns[columns.length-1] = _template_status
-				        .replace("@status_text", item.status_text)
-				        .replace("@status_info", item.status_info)
-				        .replace("@status_class", item.status_class)
+				        .replace(":status_text", item.status_text)
+				        .replace(":status_info", item.status_info)
+				        .replace(":status_class", item.status_class)
 				    ;
 				    
 				    //Tempalte de Acciones
 				    columns.push(
 				        _template_action_search
-				        	.replace("@id", item.id) //View
-				        	.replace("@id", item.id) //Edit
-				        	.replace("@id", item.id) //Delete
+				        	.replace(":id", item.id) //View
+				        	.replace(":id", item.id) //Edit
+				        	.replace(":id", item.id) //Delete
 				    );
 				    
 			    		
@@ -486,12 +495,62 @@ function searchrecord_handler(){
 				
 			} else if( data.status == 404 ){
 				//_token = data.response.token;				
-				notify(data.statusText, data.icon);
+				ex.notify(data.statusText, data.icon);
 			}
 			
 			$("#btn_search").prop("disabled", false);
-			$.isLoading("hide");	
+			$.loading("hide");	
 	    }
 	});	
+}
+</script>
+
+
+
+<script>
+/**
+* Eliminar un registro* 
+* @return
+*/
+function deleterecord_handler(id){
+	bootbox.confirm({
+	    title: "<span style=\"text-transform: uppercase;\">:text - <small>{Lang::get('dashboard.info.delete')}</small></span>",
+	    size: "small",
+	    message: "{Lang::get('dashboard.actions.delete_confir')}",
+	    buttons: {
+	        cancel: {
+	            label: '<i class="fa fa-times"></i> {Lang::get("cancel")}',
+	            className: "btn-danger"
+	        },
+	        confirm: {
+	            label: '<i class="fa fa-check"></i> {Lang::get("confir")}',
+	            className: "btn-success"
+	        }
+	    },
+	    callback: function (result) {
+	    	if( result ){
+	    		deleterecord_callback(id);
+	    	}
+	    }
+	});
+}
+
+function deleterecord_callback( id ){
+	$.ajax({
+		url : "/api/v1/users.json/" + id,
+		type : "DELETE",
+		dataType: "JSON",
+		beforeSend: function( e ) {
+			$.loading({ text: "{Lang::get('processing')}..." });
+		}
+	}).done(function( data ) {
+		$("#tr_" + id).addClass("delete_success");
+		if( data.status == 204 ){
+			setTimeout(function(){
+				_dt_data.row("#tr_"+id).remove().draw( false );
+			}, 1100);
+		}
+		$.loading("hide");
+	});
 }
 </script>

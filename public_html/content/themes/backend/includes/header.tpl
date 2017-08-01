@@ -8,9 +8,9 @@
             <!-- Logo -->
             <a href="#" class="logo">
                 <!-- mini logo for sidebar mini 50x50 pixels -->
-                <span class="logo-mini">{$app->company_name}</span>
+                <span class="logo-mini">{$app->company_name|default:'TIVE'}</span>
                 <!-- logo for regular state and mobile devices -->
-                <span class="logo-lg">{$app->company_name}</span>
+                <span class="logo-lg">{$app->company_name|default:'CREATIVE'}</span>
             </a>
 
             <!-- Header Navbar: style can be found in header.less -->
@@ -34,20 +34,19 @@
                                 <!-- User image -->
                                 <li class="user-header">
                                     <img src="{$theme.img|cat:'user.backend.png'}" class="img-circle" alt="" style="background-color: #fff">
-
                                     <p>
                                         {$backend.description|upper}
                                         <small>{if $backend.profile_name}{$backend.profile_name}{/if}</small>
                                     </p>
                                 </li>
-                                <!-- Menu Body --
-               <!-- Menu Footer-->
+                                <!-- Menu Body -->
+                                <!-- Menu Footer-->
                                 <li class="user-footer">
                                     <div class="pull-left">
-                                        <a href="/accounts/myprofile/?tokenurl={hash_url()}" class="btn btn-default btn-flat">Mi Perfil</a>
+                                        <a href="/accounts/myprofile/?tokenurl={hash_url()}" class="btn btn-default btn-flat"><span class="fa fa-user"></span> {l('my_profiles')}</a>
                                     </div>
                                     <div class="pull-right">
-                                        <a href="/accounts/signout/?tokenurl={hash_url()}" class="btn btn-default btn-flat">Salir</a>
+                                        <a href="/accounts/signout/?tokenurl={hash_url()}" class="btn btn-default btn-flat"><span class="fa fa-power-off"></span> {l('exit')}</a>
                                     </div>
                                 </li>
                             </ul>

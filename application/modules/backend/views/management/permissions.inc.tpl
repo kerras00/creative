@@ -1,76 +1,76 @@
 <table id="table_permisos" class="table display table-fixed" cellspacing="0" width="100%">
 	<thead>
 	    <tr>
-	    	<th>Módulo</th>
-	    	<th class="text-center"><span class="fa fa-eye" {add_tooltips('Lectura')}></span> <span class="hidden-xs">Lectura</span></th>
-	    	<th class="text-center"><span class="fa fa-plus" {add_tooltips('Agregar nuevos registros')}></span> <span class="hidden-xs">Agregar</span></th>
-	    	<th class="text-center"><span class="fa fa-edit" {add_tooltips('Editar registros')}></span> <span class="hidden-xs">Editar</span></th>
-	    	<th class="text-center"><span class="fa fa-trash" {add_tooltips('Eliminar registros')}></span> <span class="hidden-xs">Eliminar</span></th>
-	    	<th class="text-center"><span class="fa fa-print" {add_tooltips('Imprimir registros')}></span> <span class="hidden-xs">Imprimir</span></th>
-	    	<th class="text-center"><span class="fa fa-window-maximize" {add_tooltips('Personalizar opciones. Permite configurar el acceso a ciertos campos')}></span> <span class="hidden-xs">Personalizar</span></th>
+	    	<th>{Lang::get('dashboard.module')}</th>
+	    	<th class="text-center"><span class="fa fa-eye" {Helper::get('html')->tooltip(Lang::get('dashboard.info.view'))}></span> <span class="hidden-xs">{Lang::get('dashboard.actions.view')}</span></th>
+	    	<th class="text-center"><span class="fa fa-plus" {Helper::get('html')->tooltip(Lang::get('dashboard.info.add'))}></span> <span class="hidden-xs">{Lang::get('dashboard.actions.view')}</span></th>
+	    	<th class="text-center"><span class="fa fa-edit" {Helper::get('html')->tooltip(Lang::get('dashboard.info.edit'))}></span> <span class="hidden-xs">{Lang::get('dashboard.actions.edit')}</span></th>
+	    	<th class="text-center"><span class="fa fa-trash" {Helper::get('html')->tooltip(Lang::get('dashboard.info.delete'))}></span> <span class="hidden-xs">{Lang::get('dashboard.actions.delete')}</span></th>
+	    	<th class="text-center"><span class="fa fa-print" {Helper::get('html')->tooltip(Lang::get('dashboard.info.print'))}></span> <span class="hidden-xs">{Lang::get('dashboard.actions.print')}</span></th>
+	    	<th class="text-center"><span class="fa fa-magic" {Helper::get('html')->tooltip(Lang::get('dashboard.info.add'))}></span> <span class="hidden-xs">{Lang::get('dashboard.actions.custom')}</span></th>
 	    </tr>
 	</thead>
 	<tfoot>
-	     <tr>
-	    	<th>Módulo</th>
-	    	<th class="text-center"><span class="fa fa-eye"></span> <span class="hidden-xs">Lectura</span></th>
-	    	<th class="text-center"><span class="fa fa-plus"></span> <span class="hidden-xs">Agregar</span></th>
-	    	<th class="text-center"><span class="fa fa-edit"></span> <span class="hidden-xs">Editar</span></th>
-	    	<th class="text-center"><span class="fa fa-trash"></span> <span class="hidden-xs">Eliminar</span></th>
-	    	<th class="text-center"><span class="fa fa-print"></span> <span class="hidden-xs">Imprimir</span></th>
-	   		<th class="text-center"><span class="fa fa-window-maximize"></span> <span class="hidden-xs">Personalizar</span></th>
+	    <tr>
+	    	<th>{Lang::get('dashboard.module')}</th>
+	    	<th class="text-center"><span class="fa fa-eye" {Helper::get('html')->tooltip(Lang::get('dashboard.info.view'))}></span> <span class="hidden-xs">{Lang::get('dashboard.actions.view')}</span></th>
+	    	<th class="text-center"><span class="fa fa-plus" {Helper::get('html')->tooltip(Lang::get('dashboard.info.add'))}></span> <span class="hidden-xs">{Lang::get('dashboard.actions.view')}</span></th>
+	    	<th class="text-center"><span class="fa fa-edit" {Helper::get('html')->tooltip(Lang::get('dashboard.info.edit'))}></span> <span class="hidden-xs">{Lang::get('dashboard.actions.edit')}</span></th>
+	    	<th class="text-center"><span class="fa fa-trash" {Helper::get('html')->tooltip(Lang::get('dashboard.info.delete'))}></span> <span class="hidden-xs">{Lang::get('dashboard.actions.delete')}</span></th>
+	    	<th class="text-center"><span class="fa fa-print" {Helper::get('html')->tooltip(Lang::get('dashboard.info.print'))}></span> <span class="hidden-xs">{Lang::get('dashboard.actions.print')}</span></th>
+	    	<th class="text-center"><span class="fa fa-magic" {Helper::get('html')->tooltip(Lang::get('dashboard.info.add'))}></span> <span class="hidden-xs">{Lang::get('dashboard.actions.custom')}</span></th>
 	    </tr>
 	</tfoot>
     <tbody>
     
-{if isset($menus.menus) && count($menus.menus)}
-	{foreach $menus.menus as $key => $value}
+{if isset($registry) && count($registry)}
+	{foreach $registry as $key => $value}
 		
 		
     	<tr id="tr_{$value.table}">
-            <td><label for="read-{$value.table}">{$value.title}</label></td>
+            <td><label for="read-{$value.text}">{$value.text}</label></td>
             <!--Lectura-->
             <td align="center">
-				<input id="read-{$value.table}" type="checkbox" class="check read permission {$value.table}" data-module="{$value.table}" data-permission="read">
-				<label class="check" for="read-{$value.table}"></label>
+				<input id="read-{$key}" type="checkbox" class="check read permission {$key}" data-module="{$key}" data-permission="read" {if $key=='dashboard'}readonly checked{/if}>
+				<label class="check" for="read-{$key}"></label>
 			</td>
 
             <!--Agregar-->
             <td align="center">
-            	<div {if $key ==0}style="display: none"{/if}>
-            		<input id="created-{$value.table}" type="checkbox" class="check permission {$value.table}" data-module="{$value.table}" data-permission="created">
-					<label class="check" for="created-{$value.table}"></label>
+            	<div {if $key=='dashboard'}style="display: none"{/if}>
+            		<input id="created-{$key}" type="checkbox" class="check permission {$key}" data-module="{$key}" data-permission="created">
+					<label class="check" for="created-{$key}"></label>
 				</div>
             </td>
             
             <!--Editar-->
             <td align="center">
-            	<div {if $key ==0}style="display: none"{/if}>
-                	<input id="update-{$value.table}" type="checkbox" class="check permission {$value.table}" data-module="{$value.table}" data-permission="update">
-					<label class="check" for="update-{$value.table}"></label>
+            	<div {if $key=='dashboard'}style="display: none"{/if}>
+                	<input id="update-{$key}" type="checkbox" class="check permission {$key}" data-module="{$key}" data-permission="update">
+					<label class="check" for="update-{$key}"></label>
 				</div>
             </td>
             
             <!--Eliminar-->
             <td align="center">
-            	<div {if $key ==0}style="display: none"{/if}>
-                	<input id="delete-{$value.table}" type="checkbox" class="check permission {$value.table}" data-module="{$value.table}" data-permission="delete">
-					<label class="check" for="delete-{$value.table}"></label>
+            	<div {if $key=='dashboard'}style="display: none"{/if}>
+                	<input id="delete-{$key}" type="checkbox" class="check permission {$key}" data-module="{$key}" data-permission="delete">
+					<label class="check" for="delete-{$key}"></label>
 				</div>
             </td>
             
             <!--Imprimir-->
             <td align="center">
-            	<div {if $key ==0}style="display: none"{/if}>
-                	<input id="print-{$value.table}" type="checkbox" class="check permission {$value.table}" data-module="{$value.table}" data-permission="print">
-					<label class="check" for="print-{$value.table}"></label>
+            	<div {if $key=='dashboard'}style="display: none"{/if}>
+                	<input id="print-{$key}" type="checkbox" class="check permission {$key}" data-module="{$key}" data-permission="print">
+					<label class="check" for="print-{$key}"></label>
 				</div>
             </td>
             
             <!--Personalizar-->
             <td align="center">
-            	<div {if $key ==0}style="display: none"{/if}>
-                	<button class="customize btn btn-info" onclick="javascript:customize('{$value.table}')" data-module="{$value.table}" type="button"><span class="fa fa-edit" ></span></button>
+            	<div {if $key=='dashboard'}style="display: none"{/if}>
+                	<button class="customize btn btn-info" onclick="javascript:customize_handler('{$key}')" data-module="{$key}" type="button"><span class="fa fa-edit" ></span></button>
 				</div>
             </td>
         </tr>

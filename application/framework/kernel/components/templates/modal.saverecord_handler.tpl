@@ -15,7 +15,7 @@ function saverecord_handler( e ){
 			{data_fields}
 		},
 		action 			= "",
-		ajax_url 		= "{controller_save}";
+		ajax_url 		= ":controller_save";
 	
 	
 	//Nuevo Registro
@@ -39,7 +39,7 @@ function saverecord_handler( e ){
 		url : ajax_url,
 		data : data,
 	    beforeSend: function( e ) {
-			$.isLoading({ text: "Procesando..." });
+			$.isLoading({ text: "{l("processing")}..." });
 		},
 		type : ajax_type,		 
 		dataType : "json",		 

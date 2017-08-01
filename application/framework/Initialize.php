@@ -44,6 +44,8 @@ abstract class Initialize
 
 		Auth::initialize();
 
+		Registry::initialize();
+
 		Creative::get( 'Session' )->initialize();
 	}
 }

@@ -9,14 +9,14 @@
 		
 		clear_handler();
 		
-		
 		$("#id").val(id);
 		loaddata_handler( id );
 		bloquear_handler( true );
 		
+		$("#modal_wiewrecord_cancel").prop('disabled', false);
 		$("#modal_wiewrecord_submit").hide();
-		
-		$("#modal_wiewrecord_title").html("{text} - <small>Visualizar</small>");
+
+		$("#modal_wiewrecord_title").html(":text - <small>{Lang::get('dashboard.actions.visualize')}</small>");
 		$("#modal_wiewrecord").modal("show");
 	}
 </script>

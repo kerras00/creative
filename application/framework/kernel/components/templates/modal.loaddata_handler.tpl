@@ -6,7 +6,7 @@
 function loaddata_handler( id ){
 	
 	$.ajax({
-		url : "{controller_load}find/" + id,
+		url : ":controller_load/find/" + id + '?tokenurl=' + Math.random(),
 		data : {
 			id 		: id,
 			token 	: _token,

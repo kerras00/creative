@@ -18,6 +18,8 @@ function esta_entre($val1,$val2){
 }
 
 /**
+ * 
+ * Helper::get('html')->tooltips()
 * Agregar un ToolTips de Botstrap a un contendor HTML
 * @param undefined $text Texto a mostrar
 * @param undefined $pos Posición en la que aparecerá el tooltips. Por defecto: top

@@ -19,7 +19,7 @@
 
     <link rel="stylesheet" href="{$assets.components}font-awesome/css/font-awesome.min.css" type="text/css" />
 
-    <script type="text/javascript" src="{$assets.components}extendmejs/dist/extendme.js"></script>
+    <script type="text/javascript" src="{$assets.components}extendmejs/dist/extendme.js?v={rand()}"></script>
 
     <!-- Responsivity for older IE -->
     <!--[if lt IE 9]>
@@ -28,6 +28,10 @@
 	<![endif]-->
 
     <link rel="stylesheet" href="{$theme.css}style.css?v={rand()}" type="text/css" />
-    <link rel="stylesheet" href="{$theme.css}skins/skin-turquoise.css">
-    <link rel="stylesheet" href="{$theme.css}custom.css" type="text/css" />
+    <!--<link rel="stylesheet" href="{$theme.css}skins/skin-turquoisse.css">-->
+    <link rel="stylesheet" href="{$theme.css}custom.css?v={rand()}" type="text/css" />
+    
+    <script>
+         ExtendmeJS.path = '/assets/components/extendmejs/';
+    </script>
 </head>

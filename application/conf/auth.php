@@ -23,7 +23,7 @@ return (object) [
     ],
 
     'user_status' => array(
-        'logical_erasure' => -1,
+        'logical_erasure' => -10,
         'inactive' => 0,
         'active' => 1,
         'pending_activation' => 2,

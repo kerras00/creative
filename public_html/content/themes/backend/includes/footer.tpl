@@ -11,20 +11,29 @@
 </div>
 
 <script>
-    var AdminLTEOptions = {
-        //Enable sidebar expand on hover effect for sidebar mini
-        //This option is forced to true if both the fixed layout and sidebar mini
-        //are used together
-        sidebarExpandOnHover: true,
-        //BoxRefresh Plugin
-        enableBoxRefresh: true,
-        //Bootstrap.js tooltip
-        enableBSToppltip: true
-    };
+ var DashboardOptions = {
+    navbarMenuSlimscroll: true,
+    animationSpeed: 400,
+    BSTooltipSelector: "[data-toggle='tooltip']",
+    sidebarExpandOnHover: false,
+    enableBoxRefresh: true,
+    enableBSToppltip: true
+};
+npm('notify');
+npm('loading');
 </script>
 
-<script src="{$theme.js}script.js"></script>
+<script src="{$theme.js}script.js?v={rand()}"></script>
 
+<script src="{$assets.components}datatable/media/js/jquery.dataTables.js"></script>
+<link href="{$assets.components}datatable/media/css/jquery.dataTables.min.css" type="text/css" rel="stylesheet" />
+
+<script src="{$assets.components}jquery.numeric/jquery.numeric.js"></script>
+
+<script type="text/javascript" src="{$assets.components}select2/dist/js/select2.full.min.js"></script>
+<link rel="stylesheet" href="{$assets.components}select2/dist/css/select2.min.css">
+
+<script src="{$assets.components}bootbox/bootbox.js"></script>
 
 <!--
 <datepicker
@@ -58,9 +67,11 @@ jquery.upload
 <script src="{$assets.components}bootbox.min.js"></script>
 
 -->
-{if isset($page.js) && count($page.js)} {foreach $page.js as $key => $value} {if !$value.in_head }{* *}
-<script src="{$value.src}" type="text/javascript"></script>{* *}{/if} {/foreach} {/if}{* *}{if isset($page.css) && count($page.css)} {foreach $page.css as $key => $value} {if !$value.in_head }{* *}
-<link href="{$value.src}" rel="stylesheet"></link>{* *}{/if} {/foreach} {/if}
+
+<link rel="stylesheet" href="{$theme.css}forms.css?v={rand()}" type="text/css" />
+<link rel="stylesheet" href="{$theme.css}datatable.css?v={rand()}" type="text/css" />
+
+
 
 <script>
     $(function() {

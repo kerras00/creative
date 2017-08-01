@@ -1,12 +1,3 @@
-<style>
-.user-panel > .info > a {
-    text-decoration: none;
-    padding-right: 5px;
-    margin-top: 3px;
-    font-size: 13px;
-}
-</style>
-
 <aside class="main-sidebar">
 <section class="sidebar">
 	<div class="user-panel" style="min-height: 60px">
@@ -14,45 +5,52 @@
 			<img id="user_img_menu" src="{$theme.img|cat:'user.backend.png'}" class="user-image img-circle" alt="" style="background-color: #fff">
 		</div>
 		<div class="info">
-			<p style="margin-top: 4px;margin-bottom: 1px;">{$backend.profile_name}</p>
-			<a href="#"><span class="fa fa-circle" style="color:#56b726"></span> En línea</a>
+			<p>{$backend.description|upper}</p>
+			<a href="#"><span class="fa fa-circle" style="color:#56b726"></span>{if $backend.profile_name}{$backend.profile_name}{/if}</a>
 		</div>
 	</div> 
+
+	<ul class="user-links list-unstyled">
+		<li>
+			<a href="#" title="Edit profile"> <i class="fa fa-user"></i> Perfil</a>
+		</li> 
+		<li>
+			<a href="#" title="Edit profile"> <i class="fa fa-envelope-o"></i> Mensajes</a>
+		</li> 
+		<li class="logout-link"> <a href="#" title="Log out"> <i class="fa fa-power-off"></i> </a> </li> 
+	</ul>
+
 	<ul class="sidebar-menu">
 		
-    {if isset($menus.category.backend) && count($menus.category.backend)}
-		{foreach $menus.category.backend as $key => $value}
-			<li class="header">{$value|upper}</li>
-			
-			{if isset($menus.menus) && count($menus.menus)}
-				{foreach $menus.menus as $k => $menu}
-					{if $key == $menu.category}
+	{if isset($registry) && count($registry)}	
+		{foreach $registry as $controller_ix => $controller_attr}
+			{if isset($controller_attr.methods) && count($controller_attr.methods)}
 
-						{if count($menu.childs)}
-							<li id="cliente" class="treeview">
-								<a href="#">
-									<i class="{$menu.icon}"></i>
-									<span>{$menu.title}</span>
-									<span class="pull-right-container">
-										<span class="fa fa-angle-left pull-right"></span>
-									</span>
+				<li id="{$controller_ix}" class="treeview">
+					<a href="#">
+						<i class="{$controller_attr.icon|default:'fa fa-circle'}"></i>
+						<span>{$controller_attr.text}</span>
+						<span class="pull-right-container">
+							<span class="fa fa-angle-right pull-right"></span>
+						</span>
+					</a>
+					<ul class="treeview-menu">
+						{foreach $controller_attr.methods as $method_ix => $method_attr}
+							<li id="{$method_ix}">
+								<a href="/{$controller_attr.module}/{$controller_ix}/{$method_ix}/">
+									<i class="{$method_attr.icon}"></i> <span>{$method_attr.text}</span>
 								</a>
-								<ul class="treeview-menu">
-									{foreach $menu.childs as $k => $submenu}
-										<li id="perfil">
-											{link_backend($submenu.url, $submenu.title, $submenu.icon)}
-										</li>
-									{/foreach}							
-								</ul>
 							</li>
-						{else}
-							<li>{link_backend($menu.url, $menu.title, $menu.icon)}</li>
-						{/if}
-
-					{/if}
-				{/foreach}
-			{/if}
-	
+						{/foreach}							
+					</ul>
+				</li>
+			{else}
+				<li id="{$method_ix}">
+					<a href="/{$controller_attr.module}/{$controller_ix}/">
+						<i class="{$controller_attr.icon}"></i> <span>{$controller_attr.text}</span>
+					</a>
+				</li>
+			{/if}	
 		{/foreach}
 	{/if}
 

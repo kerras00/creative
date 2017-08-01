@@ -344,7 +344,7 @@ class Conexant {
 			$out .= '<strong>Method:</strong> '. __FUNCTION__ .'<br/>';
 			$out .= '<strong>Line:</strong> '.$ex->getLine();
 			
-			$add =  '<strong>Query: </strong><br/><pre>' . $_query.'</pre>';
+			$add =  '<strong>Query: </strong><br/><pre>' . $query.'</pre>';
 			if( count($params)>0 ){
 				$add .= '<strong>Parameters: </strong>';
 				//$add .= '<br/>Paramns: ' . var_dump ($params);
@@ -449,6 +449,9 @@ class Conexant {
      * @return boolean, true on success or false on failure
      */
     public function begin(){
+	  	if ( !$this->conected ) {
+	        $this->open( $this->DB_USER, $this->DB_PASSWORD, $this->DB_DATABASE, $this->DB_HOST );
+	    }
         return $this->connection->beginTransaction();
     }
     

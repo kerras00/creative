@@ -7,7 +7,7 @@
 */
 function addrecord_handler( title ){
 	
-	title = Object.is_string(title) ? title : "{text} - <small>Agregar nuevo</small>";
+	title = Object.isString(title) ? title : ":text - <small>Agregar nuevo</small>";
 	
 	//Inicializar los valores por defecto
 	$("#id").val(-1);

@@ -32,7 +32,7 @@ abstract class Initialize
 		Lang::set_locale( App::get()->locale );
 
 		Auth::initialize();
-
+		Registry::initialize();
 		Creative::get( 'Session' )->initialize();
 	}
 }

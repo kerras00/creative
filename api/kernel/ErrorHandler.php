@@ -1,6 +1,6 @@
 <?php
 
-class ErrorHandler extends Exception
+abstract class ErrorHandler extends Exception
 {
     public $status;
 	public $code;
@@ -16,6 +16,11 @@ class ErrorHandler extends Exception
 			"Line: " => $this->line
 		);
     }
+
+	public static function run_exception( $exception_title, $exception_message = '' )
+	{
+
+	}
 
 }
 
@@ -84,7 +89,7 @@ abstract class log {
 * 
 * @return
 */
-function ErrorHandler($code, $message, $file, $line){
+function _ErrorHandler($code, $message, $file, $line){
     if (!(error_reporting() & $code)) {        
         return; // Este código de error no está incluido en error_reporting
     }
@@ -124,7 +129,7 @@ function ErrorHandler($code, $message, $file, $line){
 
     return true;
 }
-set_error_handler("ErrorHandler");
+set_error_handler("_ErrorHandler");
 
 
 

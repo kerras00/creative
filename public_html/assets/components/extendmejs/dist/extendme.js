@@ -710,6 +710,10 @@ function npm(package) {
         notify: [
             ExtendmeJS.path + 'dist/components/notify/notify.js',
             ExtendmeJS.path + 'dist/components/notify/notify.css'
+        ],
+        loading: [
+            ExtendmeJS.path + 'dist/components/loading/loading.js',
+            ExtendmeJS.path + 'dist/components/loading/loading.css'
         ]
     }
     var path;

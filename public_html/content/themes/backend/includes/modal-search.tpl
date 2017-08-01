@@ -9,25 +9,29 @@
 		<div class="row">
 			<div class="col-md-12">	  
 				<table id="dt_sresult" class="display data-table compact" cellspacing="0" width="100%">
-		    		<thead>
-					    <tr>
-						{if isset($table.columns) && count($table.columns)}
-							{foreach $table.columns as $key => $value}
-								<th>{$key}</th>
-							{/foreach}
-						{/if}					
-						<th>{_("Acciones")}</th>
-					    </tr>
+					<thead>
+						<tr>
+							{if isset($table.columns) && count($table.columns)}
+								{foreach from=$table.columns item=column}
+									<th align="{$column.align|default:'left'}" {if $column.type=='label'}style="text-align: center;"{/if}>{$column.label}</th>
+								{/foreach}
+							{/if}
+							<th align="center" style="text-align: center;">
+								{l("dahsboard.table_action_label")}
+							</th>
+						</tr>
 					</thead>
 					<tfoot>
-					    <tr>
-						{if isset($table.columns) && count($table.columns)}
-							{foreach $table.columns as $key => $value}
-								<th>{$key}</th>
-							{/foreach}
-						{/if}	
-						<th>{_("Acciones")}</th>
-					    </tr>
+						<tr>
+							{if isset($table.columns) && count($table.columns)}
+								{foreach from=$table.columns item=column}
+									<th align="{$column.align|default:'left'}" {if $column.type=='label'}style="text-align: center;"{/if}>{$column.label}</th>
+								{/foreach}
+							{/if}
+							<th align="center" style="text-align: center;">
+								{l("dahsboard.table_action_label")}
+							</th>
+						</tr>
 					</tfoot>
 			
 					<tbody></tbody>
@@ -44,13 +48,14 @@
 </div><!-- /.modal -->
 
 <script>
+	var _dt_sresult, _option_dt_sresult;
 	$(document).ready(function() {
 		
 		if( typeof searchrecord_handler !== "undefined" ){
 			$('#btn_search').click(searchrecord_handler);
 		}
 		
-		var _option_dt_sresult = {
+		_option_dt_sresult = {
 			"language": {
 				"info": "Registros <strong>_START_</strong> al <strong>_END_</strong> de un total de <strong>_TOTAL_</strong> registros",
 				"infoFiltered": " - filtrado de _MAX_ registros",

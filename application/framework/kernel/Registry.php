@@ -1,30 +1,78 @@
 <?php
 
 
-class Registry{
-    private static $_instancia;
-    private $_data;
-    
-    //no se puede instanciar la clase
-    private function __construct() {}
-    
-    //singleton
-    public static function get_instancia() {
-        if(!self::$_instancia instanceof self){
-            self::$_instancia = new Registry();
+class Registry
+{
+
+    private static $controllers = [];
+
+    public static function initialize()
+    {        
+        $path_files = PATH_APP . 'registry' .DS ;
+        $files = scandir($path_files);
+
+        foreach ($files as $key => $value) {
+            $path = $path_files.'/'.$value;
+
+            if( strpos($value, '.php') ){
+                if(is_file($path) AND is_readable($path)){
+                    self::$controllers[str_replace('.php','',$value)] = include_once $path;
+                }
+            }
+
         }
-        return self::$_instancia;
     }
-    
-    public function __set($name, $value) {
-        $this->_data[$name] = $value;
+
+
+    public static function get($key)
+    {
+        if( isset(self::$controllers[$key]) ){
+            $r = self::$controllers[$key];
+            return $r;
+        }   
     }
-    
-    public function __get($name) {
-        if(isset($this->_data[$name])){
-            return $this->_data[$name];
-        }        
-        return false;
+
+
+    /** 
+     * -----------------------------------------------------------------------
+     * Registry GET
+     * ------------------------------------------------------------------------
+     */
+    public static function get_all()
+    {
+        $registry = self::$controllers;
+        asort($registry);
+  
+        $arr = array_reverse($registry, true); 
+        $arr['dashboard'] = [
+            'text' => 'Dashboard',
+            'icon'=> 'fa fa-dashboard',
+            'module' => 'backend',
+            'methods' => []
+        ]; 
+        $registry = array_reverse($arr, true);
+        return $registry;
     }
+
+
+    public static function get_json()
+    {
+        $registry = self::$controllers;
+        asort($registry);
+  
+        $arr = array_reverse($registry, true); 
+        $arr['dashboard'] = [
+            'text' => 'Dashboard',
+            'icon'=> 'fa fa-dashboard',
+            'module' => 'backend',
+            'methods' => []
+        ]; 
+        $registry = array_reverse($arr, true);
+        
+        $registry = json_encode($registry, JSON_PRETTY_PRINT);
+
+        return $registry;
+    }
+
 }
 ?>

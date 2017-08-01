@@ -190,7 +190,11 @@ class View extends SmartyBC
 		$this->assign('brand'		, $route['brand']);
 		$this->assign('uploads'		, $route['uploads']);
 		$this->assign('angular'		, $this->_use_angular);
-		//$this->assign('echo'		, $GLOBALS['CREATIVE']['echo']);
+
+		$this->assign('registry'	, Registry::get_all());
+
+
+		$this->assign('outerhtml'		, OuterHTML::get());
 		//$this->assign('app'			, $GLOBALS['CREATIVE']['CONF']['app']);
 
 		//$this->assign('breadcrumbs'	, false);

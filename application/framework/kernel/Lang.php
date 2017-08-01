@@ -30,8 +30,10 @@ abstract class Lang
         } elseif ( count($patterns) > 1 AND !file_exists( $path_lang . $patterns[0].'.php') ){
 
             $content = include $path_lang . 'default.php';
-            $taken = $content[$patterns[0]]; //array|string
-
+            if( isset($content[$patterns[0]]) )
+                $taken = $content[$patterns[0]]; //array|string
+            else $taken = '';
+            
             if( is_array($taken) ){
                 $taken = $taken[$patterns[1]];
             }

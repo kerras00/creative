@@ -4,25 +4,27 @@
 	var _module = '{$module}';
 	var _token = '{$token}';
 
-	var _template_action = '<div style="text-align:center">{if $table.view}<button class="btn btn-default" onclick="javascript:viewrecord_handler(@id)" title="" type="button" data-placement="top" data-toggle="tooltip" toggle="tooltip" data-original-title="Visualizar los detalles de este registro "><span class="fa fa-eye"></span> </button>{/if} ' +
-			' {if $table.edit}<button class="btn btn-info" onclick="javascript:editrecord_handler(@id)" title="" type="button" data-placement="top" data-toggle="tooltip" toggle="tooltip" data-original-title="Haga click para editar este registro"><span class="fa fa-edit"></span> </button>{/if} ' +
-			' {if $table.delete}<button class="btn btn-danger" onclick="javascript:deleterecord_handler(@id)" title="" type="button" data-placement="top" data-toggle="tooltip" toggle="tooltip" data-original-title="Haga click para eliminar este registro"><span class="fa fa-trash"></span> </button>{/if} ' +
-			'</div>';
+	var _template_action = '<div style="text-align:center">'+
+								' {if $table.view}<button class="btn btn-default" onclick="javascript:viewrecord_handler(:id)" type="button" {Helper::get("html")->tooltip(Lang::get("dashboard.info.details"))}><span class="fa fa-eye"></span> </button>{/if} ' +
+								' {if $table.edit}<button class="btn btn-info" onclick="javascript:editrecord_handler(:id)" type="button" {Helper::get("html")->tooltip(Lang::get("dashboard.info.edit"))}><span class="fa fa-edit"></span> </button>{/if} ' +
+								' {if $table.delete}<button class="btn btn-danger" onclick="javascript:deleterecord_handler(:id)"  type="button"  {Helper::get("html")->tooltip(Lang::get("dashboard.info.delete"))}><span class="fa fa-trash"></span> </button>{/if} ' +
+							'</div>';
 	
-	var _template_action_search = '<div style="text-align:center">{if $table.view}<button class="btn btn-default" onclick="javascript:viewrecord_handler(@id);" title="" type="button" data-placement="top" data-toggle="tooltip" toggle="tooltip" data-original-title="Visualizar los detalles de este registro "><span class="fa fa-eye"></span> </button>{/if} ' +
-			' {if $table.edit}<button class="btn btn-info" onclick="javascript:editrecord_handler(@id)" title="" type="button" data-placement="top" data-toggle="tooltip" toggle="tooltip" data-original-title="Haga click para editar este registro"><span class="fa fa-edit"></span> </button>{/if} ' +
-			'</div>';
+	var _template_action_search = '<div style="text-align:center">{if $table.view}<button class="btn btn-default" onclick="javascript:viewrecord_handler(:id);" title="" type="button"  {Helper::get("html")->tooltip(Lang::get("dashboard.info.details"))}><span class="fa fa-eye"></span> </button>{/if} ' +
+										' {if $table.edit}<button class="btn btn-info" onclick="javascript:editrecord_handler(:id)" title="" type="button"  {Helper::get("html")->tooltip(Lang::get("dashboard.info.edit"))}><span class="fa fa-edit"></span> </button>{/if} ' +
+									'</div>';
 			
 			
-	var _template_status = '<div style="text-align:center"><span class="label label-@status_class" {*html::tooltips("@status_info")*}>@status_text</span></div>';
+	var _template_status = '<div style="text-align:center">'+
+								'<span class="label label-:status_class" {Helper::get("html")->tooltip(":status_info")}>:status_text</span></div>';
 	
 	var _datable_columns = [];
 	var _datable_columns_pk = '';
 	
 	{if isset($table.columns) && count($table.columns)}
 		{foreach $table.columns as $key => $value}
-			_datable_columns.push('{$value["field"]}');
-			{if $value["primary"] == true}_datable_columns_pk = '{$value["field"]}';{/if}
+			_datable_columns.push('{$key}');
+			{if $value["primary"] == true}_datable_columns_pk = '{$key}';{/if}
 		{/foreach}
 	{/if}
 				
@@ -49,23 +51,23 @@
 	
 	$(document).ready(function(){	
 
-
-		if( typeof _option_dt_sresult !== "undefined" )
-			_dt_sresult = $('#dt_sresult').DataTable(_option_dt_sresult)
+		if( typeof _option_dt_sresult !== "undefined" ){
+			_dt_sresult = $('#dt_sresult').DataTable(_option_dt_sresult);
+			 $('.dataTables_filter input').addClass('form-control').css('display', 'inline-block').css('width', 'auto');
+		}
+			
 
 		bloquear_handler( true );
 
-		{if $btn_add == TRUE}
-			
-		if( typeof addrecord_handler !== "undefined" ){
-			if( jQuery.isFunction( addrecord_handler ) )
-				$('#btn_add').click(addrecord_handler);
-		}
-		if( typeof saverecord_handler !== "undefined" ){
-			if( jQuery.isFunction( saverecord_handler ) )
-				$('#btn_save').click(saverecord_handler);
-		}
-		
+		{if $btn_add == TRUE}			
+			if( typeof addrecord_handler !== "undefined" ){
+				if( jQuery.isFunction( addrecord_handler ) )
+					$('#btn_add').click(addrecord_handler);
+			}
+			if( typeof saverecord_handler !== "undefined" ){
+				if( jQuery.isFunction( saverecord_handler ) )
+					$('#btn_save').click(saverecord_handler);
+			}		
 		{/if}
 	});
 
@@ -74,32 +76,6 @@
 {/if}
 
 
-{if $upload_image == TRUE}
-{literal}
-
-<!--Upload Imagen-->
-<script>	
-$('#imagen').change(cargar_imagen);
-function upload_image(e) {
-      var files = e.target.files; // FileList object     
-      // Obtenemos la imagen del campo "file".
-      for (var i = 0, f; f = files[i]; i++) {
-        //Solo admitimos imágenes.
-        if (!f.type.match('image.*')) {
-            continue;
-        }
-        var reader = new FileReader();
-        reader.onload = (function(theFile) {
-            return function(e) {
-            	$('#imagen_thumb').attr('src',e.target.result);
-			};
-        })(f);
-        reader.readAsDataURL(f);
-      }
-}
-</script>
-{/literal}
-{/if}
 
 {if $tinymce == TRUE}
 <script>
