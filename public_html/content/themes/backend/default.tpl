@@ -1,4 +1,5 @@
-{include file="includes/head.tpl"} {include file="includes/header.tpl"}
+{include file="includes/head.tpl"}
+{include file="includes/header.tpl"}
 <main id="main-content">
     <div id="main-content-section" class="main-section">
 

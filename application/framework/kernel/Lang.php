@@ -72,7 +72,7 @@ abstract class Lang
         //Reemplazo de texto
         if( is_array($option) ){
             foreach ($option as $key => $value) {
-                $taken = substr( ':'.$key, $value, $taken );
+                $taken = str_ireplace( ':'.$key, $value, $taken );
             }
         } elseif( is_numeric($option) ){
             $taken = str_ireplace( '{0}', $option, $taken );

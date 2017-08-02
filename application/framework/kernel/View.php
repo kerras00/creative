@@ -180,6 +180,10 @@ class View extends SmartyBC
 			ErrorHandler::run_exception( 'View Not Found: [' . $path_view. ']' );
 		}
 
+		if( $options AND count($options) ){
+			$active_menu= isset($options['active_menu']) ? $options['active_menu'] : '';
+		}		
+
 		$this->template_dir = $route['theme']['path'];
 		$this->config_dir 	= PATH_TEMPORAL . 'configs';
 		$this->compile_dir 	= PATH_TEMPORAL . 'templates_c' . DS;
@@ -191,10 +195,14 @@ class View extends SmartyBC
 		$this->assign('uploads'		, $route['uploads']);
 		$this->assign('angular'		, $this->_use_angular);
 
-		$this->assign('registry'	, Registry::get_all());
+		$this->assign('modules'		, Registry::get_modules());
+		$this->assign('menu'		, Registry::get_menu());
 
+		$this->assign('outerhtml'	, OuterHTML::get());
 
-		$this->assign('outerhtml'		, OuterHTML::get());
+		$this->assign('options'		, $options);
+		$this->assign('active_menu', $active_menu);
+
 		//$this->assign('app'			, $GLOBALS['CREATIVE']['CONF']['app']);
 
 		//$this->assign('breadcrumbs'	, false);

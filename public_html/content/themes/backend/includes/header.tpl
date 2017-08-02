@@ -43,10 +43,10 @@
                                 <!-- Menu Footer-->
                                 <li class="user-footer">
                                     <div class="pull-left">
-                                        <a href="/accounts/myprofile/?tokenurl={hash_url()}" class="btn btn-default btn-flat"><span class="fa fa-user"></span> {l('my_profiles')}</a>
+                                        <a href="/accounts/myprofile/?tokenurl={hash_url()}" class="btn btn-default btn-flat"><span class="fa fa-user"></span> {Lang::get('my_profile')}</a>
                                     </div>
                                     <div class="pull-right">
-                                        <a href="/accounts/signout/?tokenurl={hash_url()}" class="btn btn-default btn-flat"><span class="fa fa-power-off"></span> {l('exit')}</a>
+                                        <a href="/accounts/signout/?tokenurl={hash_url()}" class="btn btn-default btn-flat"><span class="fa fa-power-off"></span> {Lang::get('exit')}</a>
                                     </div>
                                 </li>
                             </ul>
@@ -61,8 +61,7 @@
             </nav>
         </header>
 
-        {include file="includes/menu.tpl"}
-
+        {include file="includes/sidebar.tpl"}
 
         <section class="content-wrapper">
             <section class="content">

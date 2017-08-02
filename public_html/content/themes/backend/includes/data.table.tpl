@@ -26,11 +26,11 @@
                     <tr>
                         {if isset($table.columns) && count($table.columns)}
                             {foreach from=$table.columns item=column}
-                                <th align="{$column.align|default:'left'}" {if $column.type=='label'}style="text-align: center;"{/if}>{$column.label}</th>
+                                <th align="{$column.align|default:'left'}" {if $column.type=='label'}style="text-align: center;"{/if}>{$column.text}</th>
                             {/foreach}
                         {/if}
                         <th align="center" style="text-align: center;">
-                            {l("dahsboard.table_action_label")}
+                            {Lang::get("dashboard.actions.actions")}
                         </th>
                     </tr>
                 </thead>
@@ -38,11 +38,11 @@
                     <tr>
                         {if isset($table.columns) && count($table.columns)}
                             {foreach from=$table.columns item=column}
-                                <th align="{$column.align|default:'left'}" {if $column.type=='label'}style="text-align: center;"{/if}>{$column.label}</th>
+                                <th align="{$column.align|default:'left'}" {if $column.type=='label'}style="text-align: center;"{/if}>{$column.text}</th>
                             {/foreach}
                         {/if}
                         <th align="center" style="text-align: center;">
-                            {l("dahsboard.table_action_label")}
+                            {Lang::get("dashboard.actions.actions")}
                         </th>
                     </tr>
                 </tfoot>

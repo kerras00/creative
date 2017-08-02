@@ -23,12 +23,11 @@
 	</tfoot>
     <tbody>
     
-{if isset($registry) && count($registry)}
-	{foreach $registry as $key => $value}
+{if isset($modules) && count($modules)}
+	{foreach $modules as $key => $value}
 		
-		
-    	<tr id="tr_{$value.table}">
-            <td><label for="read-{$value.text}">{$value.text}</label></td>
+    	<tr id="tr_{$key}">
+            <td><label for="read-{$value.text}">{$value.text} {if $value.info}{Helper::get('html')->icon_help($value.info)}{/if}</label></td>
             <!--Lectura-->
             <td align="center">
 				<input id="read-{$key}" type="checkbox" class="check read permission {$key}" data-module="{$key}" data-permission="read" {if $key=='dashboard'}readonly checked{/if}>

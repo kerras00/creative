@@ -1,6 +1,7 @@
-{include file="includes/datatable.back.tpl" 
+{include file="includes/data.table.tpl" 
 	data=$data 
 	table=$table}
+
 
 {if $search}
 	{include file="includes/modal-search.tpl" 
@@ -11,163 +12,7 @@
 
 {include file="includes/scripts.back.tpl" general=true}
 
-
-<div id="modal_custom" class="modal fade" data-backdrop-limit="1" tabindex="-1" role="dialog" aria-labelledby="modal_custom_title" aria-hidden="true" data-backdrop="static" data-keyboard="false">
-	<div class="modal-dialog modal-sm" role="document">
-		<div class="modal-content">
-			<div class="modal-header">
-				<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-				<h4 class="modal-title" id="modal_custom_title" style="text-transform: uppercase;">Personalizar módulo</h4>
-			</div>
-							
-			<!-- body modal -->
-			<div class="modal-body">
-				<div class="row">
-					<div class="col-md-12">
-						<table id="table_permissions" class="table display" cellspacing="0" width="100%">
-							<thead>
-							    <tr>
-							    	<th>Campo</th>
-							    	<th class="text-center"><span class="fa fa-cog"></span> <span class="hidden-xs">Acceso</span></th>
-							    	<th class="text-center"></th>
-							    </tr>
-							</thead>
-							<tfoot>
-							     <tr>
-							    	<th>Campo</th>
-							    	<th class="text-center"><span class="fa fa-cog"></span> <span class="hidden-xs">Acceso</span></th>
-							    	<th class="text-center"></th>
-							    </tr>
-							</tfoot>
-						    <tbody>
-						    </tbody>
-						</table>
-					</div>
-				</div>
-			</div>
-
-			<!-- Modal Footer -->
-			<div class="modal-footer">
-				<!--<button class="btn btn-danger pull-left" data-dismiss="modal"><span class="fa fa-ban"></span> Cerrar</button>-->
-				<button id="modal_custom_submit" data-dismiss="modal" type="button" class="btn btn-success"><span class="fa fa-check"></span> Aceptar</button>
-			</div>
-		</div>
-	</div>
-</div>
-
-<script>
-
-
-function addrecord_callback(){
-	$('#default_module').val( $('.read:first').data('module') ).change();
-	modules = $.extend(true, {}, modules_intitialize);
-}
-
-var modules = {
-{foreach $fields_db as $key => $value}
-	{$key} : {
-	{foreach $value as $key_2 => $value_2}{if $value_2["Key"]!='PRI' AND $value_2["Field"]!='created'}
-	{$value_2["Field"]} : {
-			label : '{$value_2["label"]|capitalize}',
-			access : 0
-		},
-	{/if}{/foreach}},
-{/foreach}}
-var modules_intitialize = $.extend(true, {}, modules);
-
-function customize( id ){
-	
-	if( typeof modules[id] === "undefined"  ){
-		messagebox('Personalizar Módulo', 'No se permite configurar este módulo');
-		$('body').addClass('modal-open');
-	} else {
-		
-		$("#modal_custom").modal('show');
-		$("#modal_custom")
-			.css("z-index", parseInt($('#modal_wiewrecord').css('z-index')) + 100)
-			.css("paddingTop", '25px');
-		
-		$('#modal_custom_title').html('{$title} - <small>Personalizar '+id+'</small>');
-		
-		$('#table_permissions tbody').html('');
-		
-		$.each(modules[id], function(index, item){
-			var field = '<td align="left">@text</td>'.replace('@text', item['label']);
-			var action = '<td align="center">'+
-				'<select id="access_'+index+'" data-field="'+index+'" data-module="' +id+ '" class="form-control access_field" style="width: 100%;">'+
-					'<option value="1">Si</option>'+
-					'<option value="2">Solo vista</option>'+
-					'<option value="0" selected>Oculto</option>'+
-				'</select>'+
-			'</td> <td><span id="label-'+index+'" class="fa fa-circle" style="margin-top:10px;color:#dd4b39"></span></td>';	
-			$('#table_permissions').append('<tr>'+field + action+'</tr>');
-			$('#access_' + index).on("change", save_access);
-			$('#access_' + index).val(item['access']).change();
-			
-		});
-		
-	}
-	
-};
-
-
-function save_access(){
-	var base = $(this);
-	var modulo = base.data('module');
-	var field = base.data('field');
-	var val = base.val();
-	modules[modulo][field]['access'] = val;
-	
-	$('#read-'+modulo).prop('checked',1);
-	
-	switch( val ){
-		case '0': color = '#dd4b39'; break;
-		case '1': color = '#00a65a'; break;
-		case '2': color = '#f39c12'; break;
-	}
-	$('#label-'+field).css('color', color);
-}
-
-
-
-
-/*
-var menus = {
-{foreach $menus.menus as $key => $value}
-	'{$value["name"]}' : [
-	{foreach $value.actions as $key_2 => $value_2}
-		 ['{$key_2}','{if $value_2==""}$key_2{else}{$value_2}{/if}'],
-	{/foreach}
-	],
-{/foreach}
-}
-
-
-function customize( id ){
-	$("#modal_custom").modal('show');
-	$("#modal_custom")
-		.css("z-index", parseInt($('#modal_wiewrecord').css('z-index')) + 100)
-		.css("paddingTop", '50px');
-	
-	
-	$('#table_permissions tbody').html('');
-	
-	$.each(menus[id], function(index, item){
-		var field = '<td align="left">@text</td>'.replace('@text', item[1]);
-		var action = '<td align="center">'+
-			'<select id="@id" class="form-control" style="width: 100%;">'.replace('@id', item[0])+
-				'<option value="1" selected>Si</option>'+
-				'<option value="2">Solo vista</option>'+
-				'<option value="0" >Oculto</option>'+
-			'</select>'+
-		'</td>';	
-		$('#table_permissions').append('<tr>'+field + action+'</tr>');
-	});
-	
-};
-*/
-</script>
-
+{include file="includes/permissions.tpl"}
 
 
 <script>
@@ -220,33 +65,33 @@ function saverecord_handler( e ){
 		url : ajax_url,
 		data : data,
 	    beforeSend: function( e ) {
-			$.isLoading({ text: "Procesando..." });
+			$.loading({ text: "{Lang::get('processing')}..." });
 		},
 		type : ajax_type,		 
 		dataType : "json",		 
 		success : function(data) {
 			
-			$.isLoading( "hide" );
+			$.loading( "hide" );
 			_token = data.token;
 			console.log(data.statusText);
 			
 			
 			//Unauthorized - Indica que el cliente debe estar autorizado primero antes de realizar operaciones con los recursos
 			if( data.status == 401 ){
-	    		notify(data.statusText, data.icon);
+	    		ex.notify(data.statusText, data.icon);
 	    		return false;
 	    	}
 	    	
 	    	//Unprocessable Entity - Parametros incorrectos
 			if( data.status == 422 ){
-	    		notify(data.statusText, data.icon);
+	    		ex.notify(data.statusText, data.icon);
 	    		$("#"+data.field).focus().parent().addClass("has-error");
 	    		return false;
 	    	}
 	    	
 	    	//Internal Server Error
 	    	if( data.status == 500 ){
-	    		notify(data.statusText, data.icon);
+	    		ex.notify(data.statusText, data.icon);
 	    		return false;
 	    	}
 	    	
@@ -254,7 +99,7 @@ function saverecord_handler( e ){
 	    	if( data.status == 201 ){
 	    		
 				$("#modal_wiewrecord").modal("hide");
-				notify(data.statusText, data.icon);
+				ex.notify(data.statusText, data.icon);
 				edit_mode = false;
 				
 				if (action == "update"){
@@ -274,17 +119,17 @@ function saverecord_handler( e ){
 				
 				//Template de Estatus
 				columns[columns.length-1] = _template_status
-			        .replace("@status_text", data.data.status_text)
-			        .replace("@status_help", data.data.status_help)
-			        .replace("@status_class", data.data.status_class)
+			        .replace(":status_text", data.data.status_text)
+			        .replace(":status_help", data.data.status_help)
+			        .replace(":status_class", data.data.status_class)
 			    ;
 			    
 			    //Tempalte de Acciones
 			    columns.push(
 			        _template_action
-			        	.replace("@id", data.data.id) //View
-			        	.replace("@id", data.data.id) //Edit
-			        	.replace("@id", data.data.id) //Delete
+			        	.replace(":id", data.data.id) //View
+			        	.replace(":id", data.data.id) //Edit
+			        	.replace(":id", data.data.id) //Delete
 			    );
 				
 				var _row_node = _dt_data.row.add(columns).draw().node();
@@ -332,13 +177,13 @@ function loaddata_handler( id ){
 			token 	: _token,
 	    },
 	    beforeSend: function( e ) {
-			$.isLoading({ text: "Procesando..." });
+			$.loading({ text: "{Lang::get('processing')}..." });
 		},
 		type : "GET",		 
 		dataType : "json",		 
 		success : function(data) {
 			
-			$.isLoading( "hide" );			
+			$.loading( "hide" );			
 	    	if( data.status == 200 ){
 	    		
 	    		var permissions = data.data.permissions;
@@ -382,7 +227,7 @@ function loaddata_handler( id ){
 	    		
 				//_token = data.response.token;				
 			} else {					
-				notify(data.statusText, data.icon);
+				ex.notify(data.statusText, data.icon);
 			}				
 	    }
 	});
@@ -399,7 +244,7 @@ var _dt_sresult;
 function searchrecord_handler(){
 	
 	if( $("#search").val() == "" ){
-		notify("Debe ingresar un parametro de busqueda", "info");
+		ex.notify("Debe ingresar un parametro de busqueda", "info");
 		$("#search").focus();
 		return ;
 	}
@@ -412,7 +257,7 @@ function searchrecord_handler(){
 	$.ajax({
 		url : "/api/v1/{$module}.json/search/" + filter + "/" + value,
 	    beforeSend: function( e ) {
-			$.isLoading({ text: "Procesando..." });
+			$.loading({ text: "{Lang::get('processing')}..." });
 		},
 		type : "GET",
 		dataType : "json",		 
@@ -436,17 +281,17 @@ function searchrecord_handler(){
 						
 					//Template de Estatus
 					columns[columns.length-1] = _template_status
-				        .replace("@status_text", item.status_text)
-				        .replace("@status_info", item.status_info)
-				        .replace("@status_class", item.status_class)
+				        .replace(":status_text", item.status_text)
+				        .replace(":status_info", item.status_info)
+				        .replace(":status_class", item.status_class)
 				    ;
 				    
 				    //Tempalte de Acciones
 				    columns.push(
 				        _template_action_search
-				        	.replace("@id", item.id) //View
-				        	.replace("@id", item.id) //Edit
-				        	.replace("@id", item.id) //Delete
+				        	.replace(":id", item.id) //View
+				        	.replace(":id", item.id) //Edit
+				        	.replace(":id", item.id) //Delete
 				    );
 				    
 			    		
@@ -458,11 +303,11 @@ function searchrecord_handler(){
 				
 			} else if( data.status == 404 ){
 				//_token = data.response.token;				
-				notify(data.statusText, data.icon);
+				ex.notify(data.statusText, data.icon);
 			}
 			
 			$("#btn_search").prop("disabled", false);
-			$.isLoading("hide");	
+			$.loading("hide");	
 	    }
 	});	
 }

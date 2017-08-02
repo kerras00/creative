@@ -51,15 +51,27 @@ function include_functions( $fn ){
 }
 
 
+/**
+ * Devuelve un array con columnas apra Bootstrap
+ *
+ * @param integer $lg
+ * @param integer $md
+ * @param integer $sm
+ * @param integer $xs
+ * @return void array
+ */
+function col( $lg = 12, $md = 12, $sm = 12, $xs = 12){
+	$col['xs'] = $xs;
+	$col['sm'] = $sm;
+	$col['md'] = $md;
+	$col['lg'] = $lg;
+	return $col;
+}
+
 
 
 
 #*************************************************************
-
-
-
-
-
 
 /**
 * Returns a GUIDv4 string

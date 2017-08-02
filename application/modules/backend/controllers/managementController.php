@@ -75,7 +75,7 @@ class managementController extends backendController {
 			//'controller_save' 	=> '/api/v1/'.$this->module_name.'.json/',
 			//'controller_load'	=> '/api/v1/'.$this->module_name.'.json/',
 			 'size' 	=> 'lg'
-			,'text'		=> Lang::get('dashboard.users')
+			,'text'		=> Lang::get('dashboard.modules.users')
 		));
 		
 		//Nombre
@@ -176,30 +176,31 @@ class managementController extends backendController {
 		$ModalRecord->write();
 		
 		
-		$this->view->assign('data', $this->model->all(array(
-			"user_decp" =>
-				"CONCAT(name, ' ', last_name)",
-			"status_text" =>
-				"CASE 
-					WHEN status = 0 THEN 'Inactiva' 
-					WHEN status = 1 THEN 'Activa' 
-				END",
-			"status_class" =>
-				"CASE 
-					WHEN status = 0 THEN 'danger' 
-					WHEN status = 1 THEN 'success' 
-				END",
-			"status_info" => 
-				"CASE 
-					WHEN status = 0 THEN 'Carrera inactiva' 
-					WHEN status = 1 THEN 'Carrera activa' 
-				END",
+		$this->view->assign('data', $this->model->all(
+			array(
+				"user_decp" =>
+					"CONCAT(name, ' ', last_name)",
+				"status_text" =>
+					"CASE 
+						WHEN status = 0 THEN '".Lang::get('dashboard.status.inactive')."' 
+						WHEN status = 1 THEN '".Lang::get('dashboard.status.active')."' 
+					END",
+				"status_class" =>
+					"CASE 
+						WHEN status = 0 THEN 'danger' 
+						WHEN status = 1 THEN 'success' 
+					END",
+				"status_info" => 
+					"CASE 
+						WHEN status = 0 THEN '".Lang::get('dashboard.status.inactive')."' 
+						WHEN status = 1 THEN '".Lang::get('dashboard.status.active')."' 
+					END",
+				)
 			)
-		)
 		);
-		$this->view->assign('title'		, Lang::get('dashboard.users') ); //Título de la Vista
+		$this->view->assign('title'		, Lang::get('dashboard.modules.users') ); //Título de la Vista
 		$this->view->assign('module'	, $this->module_name ); //Título de la Vista
-		$this->view->assign('filters'	, Registry::get('management')['module']['users']['filters']);
+		$this->view->assign('filters'	, Registry::get('users')['filters']);
 		$this->view->assign('fields_db'	, $this->_fields_db);
 		
 		//$fields = $this->database();
@@ -209,14 +210,14 @@ class managementController extends backendController {
 		$this->view->assign('table', array(
 			'columns'		=> array(
 				'user_decp'	=> array(
-					'label' 	=> l('personal_attr.name'),
+					'text' 	=> Lang::get('personal_attr.name'),
 					'primary'	=> TRUE,
 				),
 				'email'	=> array(
-					'label' 	=> l('personal_attr.email'),
+					'text' 	=> Lang::get('personal_attr.email'),
 				),
 				'status_text'	=> array(
-					'label' => l('personal_attr.status'),
+					'text' => Lang::get('personal_attr.status'),
 					'align' => 'center',
 					'type'	=> 'label',
 					'labelclass' => 'status_class',
@@ -239,7 +240,7 @@ class managementController extends backendController {
 		$this->view->template ( 'default' );        
         $this->view->theme( BACKEND );
 
-		$this->view->render(__FUNCTION__, 'index');
+		$this->view->render(__FUNCTION__, array('active_menu'=>'management') );
 	}
 	
 	
@@ -252,10 +253,8 @@ class managementController extends backendController {
 	*/
 	public function profiles() {
 		
-		$this->module = __FUNCTION__;
-		$this->module_name = str_ireplace('controller', '',  __FUNCTION__);
-		$this->module_title = 'Perfiles';
-		$this->model_profiles = $this->load_model($this->module_name);
+		$this->model = $this->load_model('users');
+		$this->model_profiles = $this->load_model('profiles');
 		
 		$ModalRecord = Creative::get( 'Components' )->render('ModalRecord', array(
 			//'allow_save'		=> TRUE,
@@ -266,30 +265,30 @@ class managementController extends backendController {
 			,'text'		=> 'Perfiles'
 		));
 		
-		
-		
+		$info = Registry::get('profiles')['fields_info'];
+	
 		//Nombre
 		$ModalRecord->add_field(array(
-			'col'	=> array('md'=>8),
+			'col'	=> $info['name']['col'],
 			'id'	=> 'name',
-			'type'	=> 'text',
-			'label'	=> 'Nombre',
-			'required'=> TRUE,
+			'type'	=> $info['name']['type'],
+			'label'	=> Registry::get('profiles')['fields']['name'],
+			'required'=> $info['name']['required'],
 		));
 		
 		
+
 		//Modulo por defecto
-		$menu = [];
-		foreach( Creative::get( 'Menus' )->get_menu() as $key => $value){
-			$menu[$value['table']] = $value['title'];
+		foreach( Registry::get_modules() as $key => $value){
+			$menu[$key] = $value['text'];
 		}
 		
 		$ModalRecord->add_field(array(
-			'col'	=> array('md'=>4),
+			'col'	=> col(4,4,6),
 			'id'	=> 'default_module',
 			'type'	=> 'select',
 			'default'	=> 'inicio',
-			'label'	=> 'Módulo por defecto',
+			'label'	=> Lang::get('dashboard.attrs.default_module'),
 			'items'	=>  $menu,
 			'required'=> TRUE,
 		));
@@ -297,23 +296,24 @@ class managementController extends backendController {
 				
 		//Descripción
 		$ModalRecord->add_field(array(
-			'col'	=> array('md'=>8),
+			'col'	=> col(8,8,6),
 			'id'	=> 'description',
 			'type'	=> 'text',
-			'label'	=> 'Descripción',
+			'label'	=> Lang::get('dashboard.attrs.description'),
 		));
 		
+
 		//Estatus
 		$ModalRecord->add_field(array(
-			'col'	=> array('md'=>4),
+			'col'	=> col(4,4,6),
 			'id'	=> 'status',
 			'type'	=> 'select',
-			'label'	=> 'Estatus',
+			'label'	=> Lang::get('personal_attr.status'),			
 			'required'=> TRUE,
 			'items'	=> array(
-				'-1' => 'Seleccione',
-				'1' => 'Activo',
-				'0' => 'Inactiva',
+				'-1' => Lang::get('selection'),
+				'1' => Lang::get('user_status.active'),
+				'0' => Lang::get('user_status.inactive'),
 			)
 		));
 		
@@ -330,11 +330,11 @@ class managementController extends backendController {
 		$ModalRecord->write();
 		
 		
-		$this->view->assign('data'	, $this->model_profiles->all(array(
+		$this->view->assign('data'	, $this->model_profiles->all([
 			"status_text" =>
 				"CASE 
-					WHEN status = 0 THEN 'Inactiva' 
-					WHEN status = 1 THEN 'Activa' 
+					WHEN status = 0 THEN '".Lang::get('dashboard.status.inactive')."' 
+					WHEN status = 1 THEN '".Lang::get('dashboard.status.active')."' 
 				END",
 			"status_class" =>
 				"CASE 
@@ -343,15 +343,15 @@ class managementController extends backendController {
 				END",
 			"status_info" => 
 				"CASE 
-					WHEN status = 0 THEN 'Carrera inactiva' 
-					WHEN status = 1 THEN 'Carrera activa' 
-				END",
-			)
-		));
+					WHEN status = 0 THEN '".Lang::get('dashboard.status.inactive')."' 
+					WHEN status = 1 THEN '".Lang::get('dashboard.status.active')."' 
+				END"
 		
-		$this->view->assign('title'		, ucfirst($this->module_title) ); //Título de la Vista
+		]));
+		
+		$this->view->assign('title'		, Lang::get('dashboard.modules.profiles') ); //Título de la Vista
 		$this->view->assign('module'	, $this->module_name ); //Título de la Vista
-		$this->view->assign('filters'	, $this->_filters);
+		$this->view->assign('filters'	, Registry::get('profiles')['filters']);
 		$this->view->assign('fields_db'	, $this->_fields_db);
 		
 		//$fields = $this->database();
@@ -359,13 +359,13 @@ class managementController extends backendController {
 		
 		//Prepara la tabla
 		$this->view->assign('table', array(
-			'columns'		=> array(
-				'Nombre'	=> array(
-					'field' 	=> 'name',
+			'columns'	=> array(
+				'name'	=> array(
+					'text' 	=> Lang::get('dashboard.personal_attr.name'),
 					'primary'	=> TRUE,
 				),	
-				'Estatus'	=> array(
-					'field' => 'status_text',
+				'status_text'	=> array(
+					'field' => Lang::get('dashboard.attrs.status'),
 					'align' => 'center',
 					'type'	=> 'label',					
 					'class' => 'status_class',
@@ -385,8 +385,9 @@ class managementController extends backendController {
 		$this->view->assign('btn_search_avanced', TRUE);	//Indica si se mostrará el botón de Busqueda Avanzada
 		$this->view->assign('search', TRUE);				//Indica si se mostrará las Opciones de busqueda
 				
-		
-		$this->view->render(__FUNCTION__, 'index');
+		$this->view->template ( 'default' );        
+        $this->view->theme( BACKEND );
+		$this->view->render(__FUNCTION__, array('active_menu'=>'management') );
 	}
 	
 

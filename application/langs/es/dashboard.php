@@ -2,14 +2,15 @@
 
 return [
 
-    'administration' => 'Administración',
-    
+       
     'success_save' => '¡Éxito! Registro guardado',
+    'users' => 'Usuario|Usuarios',
+    'profile' => 'Perfil|Perfiles',
+    'my_profile' => 'Mi Perfil',
+    'customize' => 'Personalizar',
+    'field' => 'Campo|Campos',
+    'access' => 'Acceso',
 
-    'users' => 'Usuarios',
-
-    'profiles' => 'Perfiles',
-    'profile' => 'Perfil',
 
     'required'=> 'El campo :required es requerido.',
     'email_required' => 'Ingresa un correo electrónico para continuar.',
@@ -17,25 +18,52 @@ return [
     'name_required' => 'Necesitas ingresar un nombre para continuar',
     'required_continue'=> 'El campo :required es requerido para continuar.',
     'required_status'=> 'Seleccione un estatus.',
+    'required_profile'=> 'Seleccione un perfil.',
+
+    'modules' => [
+        'users' => 'Usuarios',
+        'profiles' => 'Perfiles',
+        'administration' => 'Administración', 
+    ],
+
 
     'exists_record'=> 'Existe un registro con el mismo correo electrónico.',
     
+    'status' => [
+        'active'=> 'Activo',
+        'inactive'=> 'Inactivo',      
+    ],
+
     'info' => [
-        'search'=>'Buscar',
+        'search' => 'Buscar',
         'filter' => 'Filtros de busqueda',
         'module' => 'Módulo o entidad|Módulos o entidades',
         'view' => 'Lectura',
         'details' => 'Ver detalles',
-        'add' => 'Agregar un nuevo registro|Agregar nuevos registros',
+        'add' => 'Agregar un nuevo registro|Agregar nuevos registros.',
         'edit' => 'Editar registro|Editar registros',
         'delete' => 'Eliminar registro|Eliminar registros',
         'print' => 'Imprimir registro|Imprimir registros',
-        'custom' => 'Permite personalizar el acceso (Lectura y Escritura) de los campos del módulo',
+        'custom' => 'Permite personalizar el acceso (Lectura y Escritura) de los campos del módulo.',
         'shared' => 'Compartir',
-        'avanced_search' => 'Realizar una busqueda avanzada',
+        'avanced_search' => 'Realizar una busqueda avanzada.',
+        'users_module' => 'Gestión de usuarios del sistema.',
+
+        'modules_field_undefined' => 'No existen campos para configurar.',
+
+        'profiles_module' => 'Gestión de perfiles y control de acceso de usuarios.',
+        'profile_name' => 'Establece el nombre del perfil',
+
+        'permission_custom' => 'Personalizar permisos.'      ,  
+        'permission_access_yes' => 'Puede escribir en el campo.',
+        'permission_access_hidden' => 'El campo estará oculto.',
+        'permission_access_readonly' => 'El campo será de solo lectura.'
+
     ],
 
     
+
+
 
     'personal_attr' => [
         'code' => 'Código',
@@ -49,18 +77,30 @@ return [
         'dni' => 'Cédula',
         'email' => 'Correo electrónico',
         'birthdate' => 'Fecha de nacimiento',
+        
     ],
 
-    'my_profiles' => 'Mi Perfil',
+    'attrs' => [
+        'code' => 'Código',
+        'status' => 'Estatus',
+        'name' => 'Nombre',
+        'last_name' => 'Apellido',
+        'alias' => 'Alias',
+        'pass' => 'Contraseña',
+        'repeat_pass' => 'Repita tu contraseña',
+        'profile' => 'Perfil',
+        'dni' => 'Cédula',
+        'email' => 'Correo electrónico',
+        'birthdate' => 'Fecha de nacimiento',
+        'description' => 'Descipción',
+        'default_module' => 'Página de inicio',
+        'status'=> 'Estatus',         
+    ],
 
-    'customize' => 'Personalizar',
-    'field' => 'Campo',
-    'access' => 'Acceso',
-
-    'table_action_label' => 'Acciones',
 
     'module' => 'Módulo|Módulos',
     'actions' =>[        
+        'actions' => 'Acciones',
         'view' => 'Lectura',
         'add' => 'Agregar',
         'edit' => 'Editar',

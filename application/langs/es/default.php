@@ -7,7 +7,7 @@ return [
     'processing'=> 'Procesando',
     'enter'=> 'Entrar',
     'close'=> 'Cerrar',
-    'exit'=> 'Salir',
+    'exit'=> 'Cerrar sesión',
     'yes'=> 'Si',
     'no'=> 'No',
     'readonly'=> 'Solo lectura',
@@ -15,6 +15,9 @@ return [
     'accept'=> 'Aceptar',
     'confir'=> 'Confirmar',
     'cancel'=> 'Cancelar',
+    'my_profile'=> 'Mi perfil',
+    'messages'=> 'Mensajes',
+
 
     'required'=> 'El campo :required es requerido.',
     'required_continue'=> 'El campo :required es requerido para continuar.',
