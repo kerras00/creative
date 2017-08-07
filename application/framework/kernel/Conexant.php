@@ -4,7 +4,7 @@
 define('DB_DRIVER_MYSQL', 'mysql');
 define('DB_DRIVER_MSSQL', 'mssql');
 define('DB_DRIVER_PGSQL', 'pgsql');
-
+define('DB_DRIVER_SQLITE', 'sqlite');
 
 /**
 * Esta clase permite crear conexiones con MySQL y hacer consultas a base de datos
@@ -12,34 +12,35 @@ define('DB_DRIVER_PGSQL', 'pgsql');
 class Conexant {
 
 	const 
-		DNS_MYSQL = 'mysql:dbname=@dbname;host=@host;port=@port;charset=@charset',
-		DNS_MSSQL = 'sqlsrv:Server=@host;Database=@dbname;ConnectionPooling=0',
-		DNS_PGSQL = 'pgsql:dbname=@dbname;host=@host';
-	
+		DNS_MYSQL = 'mysql:dbname=@dbname;host=@host;port=@port;charset=@charset'
+		, DNS_MSSQL = 'sqlsrv:Server=@host;Database=@dbname;ConnectionPooling=0'
+		, DNS_PGSQL = 'pgsql:dbname=@dbname;host=@host';
+
 	protected 
-		$DRIVER			= DB_DRIVER_DATABASE,
-		$DB_USER 		= NULL,
-		$DB_PASSWORD 	= NULL,
-		$DB_HOST 		= NULL,
-		$DB_DATABASE 	= NULL,
-		$DB_PORT 		= NULL,
-		$DB_COLLATE 	= NULL,
-		$connection		= NULL;
+		$DRIVER			= DB_DRIVER_MYSQL
+		, $DB_USER 		= NULL
+		, $DB_PASSWORD 	= NULL
+		, $DB_HOST 		= NULL
+		, $DB_DATABASE 	= NULL
+		, $DB_PORT 		= NULL
+		, $DB_COLLATE 	= NULL
+		, $connection		= NULL;
 	
     private 
-    	$error 		= NULL,
-		$result 	= NULL,
-		$conected 	= FALSE,
-		$options 	= array(
-			PDO::ATTR_PERSISTENT			=> FALSE,
-			PDO::ATTR_ERRMODE				=> PDO::ERRMODE_EXCEPTION,
-			PDO::ATTR_EMULATE_PREPARES		=> FALSE,
-			//PDO::MYSQL_ATTR_INIT_COMMAND 	=> "SET NAMES utf8"
+    	$error 		= NULL
+		, $result 	= NULL
+		, $conected = FALSE
+		, $options 	= array(
+			PDO::ATTR_PERSISTENT			=> FALSE
+			, PDO::ATTR_ERRMODE				=> PDO::ERRMODE_EXCEPTION
+			, PDO::ATTR_EMULATE_PREPARES		=> FALSE
 	    );
     
 	
     /**
-	* 
+	* -----------------------------------------------------------------------------
+	* Conexant Constructor
+	* -----------------------------------------------------------------------------
 	* 
 	* @return
 	*/
@@ -81,25 +82,11 @@ class Conexant {
 		
 		try {			
 			//Seleccionar el Driver de Base de Datos por defecto para armar el DSN
-			switch( $this->DRIVER ){			
-				case DB_DRIVER_MSSQL:
-					$dsn = str_ireplace(
-						array('@dbname','@host'),
-						array($this->DB_DATABASE, $this->DB_HOST),
-						self::DNS_MSSQL
-					);
-					$this->connection = new PDO($dsn, $this->DB_USER, $this->DB_PASSWORD);
-				break;
-				
-				case DB_DRIVER_PGSQL:
-					$dsn = str_ireplace(
-						array('@dbname','@host'),
-						array($this->DB_DATABASE, $this->DB_HOST),
-						self::DNS_PGSQL
-					);
-					$this->connection = new PDO($dsn, $this->DB_USER, $this->DB_PASSWORD);
-				break;
-				
+			switch( $this->DRIVER ){
+
+				//Connection to MariaDB or MySQL
+				case 'mariadb':	
+
 				case DB_DRIVER_MYSQL:
 					$dsn = str_ireplace(
 						array('@dbname', '@host','@port', '@charset'),
@@ -109,8 +96,33 @@ class Conexant {
 					$this->connection = new PDO($dsn, $this->DB_USER, $this->DB_PASSWORD, $this->options);
 				break;
 
+				//Connection to PostgreSQL
+				case DB_DRIVER_PGSQL:
+					$dsn = str_ireplace(
+						array('@dbname','@host'),
+						array($this->DB_DATABASE, $this->DB_HOST),
+						self::DNS_PGSQL
+					);
+					$this->connection = new PDO($dsn, $this->DB_USER, $this->DB_PASSWORD);
+				break;
+
+				//Connection to Microsoft SQL Server
+				case DB_DRIVER_MSSQL:
+					$dsn = str_ireplace(
+						array('@dbname','@host'),
+						array($this->DB_DATABASE, $this->DB_HOST),
+						self::DNS_MSSQL
+					);
+					$this->connection = new PDO($dsn, $this->DB_USER, $this->DB_PASSWORD);
+				break;
+
+				//Connection to SQL Lite
+				case DB_DRIVER_SQLITE:
+					$this->pdo = new PDO('sqlite:' . $options[ 'connection_file' ], null, null,  $this->options);
+				break;
+
 				default :
-					ErrorHandler::run_exception('DRIVER DATABASE Not support');
+					ErrorHandler::exception('database', 'EC0001' ,'DRIVER DATABASE Not support');
 				break;
 			}
 			
@@ -119,33 +131,24 @@ class Conexant {
 		} catch (PDOException $ex) {
 						
 			//error_log($ex->getMessage());
-						
+			$title = 'Could not connect to database';
+
 			if( ENVIRONMENT == 'development' ){
-				
-				$title = 'Could not connect to database';
-				
-				$out  = '<strong style="color:red">'.$ex->getMessage().'</strong><br/>';
-				$out .= '<strong>File:</strong> '.$ex->getFile().'<br/>';
-				$out .= '<strong>Method:</strong> '. __FUNCTION__ .'<br/>';
-				$out .= '<strong>Line:</strong> '.$ex->getLine();
-				
-				$add .= '<strong>Connection Data:</strong><br/>';
-				$add .= '<strong>Server:</strong> '.$this->DB_HOST.'<br/>';
-				$add .= '<strong>DataBase:</strong> '.$this->DB_DATABASE.'<br/>';
-				$add .= '<strong>User:</strong> '.$this->DB_USER.'<br/>';
-				$add .= '<strong>Password:</strong> '.$this->DB_PASSWORD.'<br/>';
-				$add .= '<strong>Port:</strong> '.$this->DB_PORT.'<br/>';
-				$add .= '<strong>Collate:</strong> '.$this->DB_COLLATE.'<br/><br/>';
-				
-				$out = '<strong>Directory Module: </strong>'. $dirModulo ;
-				ErrorHandler::run_exception('Failed Connection'. $out. $add);
-					
+				$message  = '<strong>Connection Data:</strong><br/>';
+				$message .= '<strong>Driver:</strong> '.$this->DRIVER.'<br/>';
+				$message .= '<strong>Server:</strong> '.$this->DB_HOST.'<br/>';
+				$message .= '<strong>DataBase:</strong> '.$this->DB_DATABASE.'<br/>';
+				$message .= '<strong>User:</strong> '.$this->DB_USER.'<br/>';
+				$message .= '<strong>Password:</strong> '.$this->DB_PASSWORD.'<br/>';
+				$message .= '<strong>Port:</strong> '.$this->DB_PORT.'<br/>';
+				$message .= '<strong>Collate:</strong> '.$this->DB_COLLATE.'<br/>';
+
+				ErrorHandler::exception('database', 'EC0002', $title,  $message);
 				
 			} else {
-				$message = 'Erro de conexión con la base de datos.';
+				ErrorHandler::exception('database', 'EC0002', $title);
 			}
-			
-			die( $html );
+
 			return FALSE;
 		}
 	}
@@ -349,7 +352,7 @@ class Conexant {
 				$add .= '<strong>Parameters: </strong>';
 				//$add .= '<br/>Paramns: ' . var_dump ($params);
 			}			
-			ErrorHandler::run_exception('Error executing Query', $out, $add);
+			ErrorHandler::error('database', 'EC0003', 'Error executing Query', $out);
 		}
 			
 		return $result;

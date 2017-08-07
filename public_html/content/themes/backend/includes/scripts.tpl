@@ -1,4 +1,3 @@
-{if $general  == TRUE}
 <script>
 
 	var _module = '{$module}';
@@ -70,35 +69,4 @@
 			}		
 		{/if}
 	});
-
-
 </script>
-{/if}
-
-
-
-{if $tinymce == TRUE}
-<script>
-	tinymce.init({
-		selector:'#{$tinymce_control}',
-		language_url : '{$theme.plugins}tinymce/langs/es.js',
-		menu: {
-			
-		    format: {
-		    	title: 'Format', items: 'bold italic underline strikethrough superscript subscript | formats | removeformat'
-		    },
-		    table: {
-		    	title: 'Table', items: 'inserttable tableprops deletetable | cell row column'
-		    },
-
-		},
-		plugins: [
-		    'advlist autolink lists link image charmap print preview hr anchor pagebreak',
-		    'searchreplace wordcount visualblocks visualchars code fullscreen',
-		    'insertdatetime media nonbreaking save table contextmenu directionality',
-		    'emoticons template paste textcolor colorpicker textpattern imagetools'
-		],
-		toolbar1: 'insertfile undo redo | styleselect | forecolor backcolor | bold italic underline | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | fullscreen | preview visualblocks searchreplace code | media image emoticons  | link charmap pagebreak anchor hr insertdatetime',
-	});
-</script>
-{/if}

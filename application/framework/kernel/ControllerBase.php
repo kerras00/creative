@@ -23,7 +23,6 @@ abstract class ControllerBase
 
 		$storage 			= new \SplObjectStorage();
 
-		$this->controller 	= $class;
 		$this->request		= $GLOBALS['CREATIVE']['request'];
 		$this->acl 			= new Acl();
 		

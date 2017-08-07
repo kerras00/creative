@@ -39,14 +39,18 @@ class ModalRecord {
 	const FORM_GROUP = '<div class="form-group">:content</div>';
 	
 	
-	private $_attrs;
- 	private $_fields;
- 	private $_header;
- 	private $_modal;
- 	private $_data_fields = '';
- 	private $_controller;
- 	private $_text;
- 	private $_property;
+	private 
+		$_attrs
+ 		, $_fields
+ 		, $_header
+ 		, $_modal
+ 		, $_data_fields = ''
+ 		, $_controller
+ 		, $_text
+ 		, $_property = []
+	 	, $controller_load
+		, $controller_save
+		, $controller_delete;
  	
  	function __construct() {}
 	
@@ -72,11 +76,10 @@ class ModalRecord {
  		$this->_tpl_loaddata_handler		= $this->get_template( 'modal.loaddata_handler' );
  		$this->_tpl_searchrecord_handler	= $this->get_template( 'modal.searchrecord_handler' );
  		
- 		
- 		
 		$this->_attrs = [];
-		$this->_property = $property;
-		
+
+		array_merge($this->_property, $property);
+
 		//Colocar Texto del Header
 		$this->_text = $property['text'] ? $property['text'] : '';	
  		$this->_tpl_header = str_ireplace(':text', $this->_text, $this->_tpl_header);
@@ -210,7 +213,7 @@ class ModalRecord {
 		 	break;
 		 	
 		 	case $attr->type == 'source':
-		 	
+		 		$col = '';
 			 	foreach($attr->col as $key => $value){
 					$col .= 'col-' . $key .'-'. $value .' ';
 				}
@@ -311,58 +314,54 @@ class ModalRecord {
 		//---------------------
 		
 		//SCRIPT Save Record
-		$script_save_record = $this->_tpl_asaverecord_handler;
-		$this->_data_fields = substr($this->_data_fields, 0, strlen($this->_data_fields)-2);
-		$script_save_record = str_ireplace(':data_fields', $this->_data_fields, $script_save_record);
-		$script_save_record = str_ireplace(':controller_save', $this->_property['controller_save'], $script_save_record);
-		$script_save_record = str_ireplace(':text', $this->_text, $script_save_record);
+		if( isset($this->_property['controller_save']) ){
+			$script_save_record = $this->_tpl_asaverecord_handler;
+			$this->_data_fields = substr($this->_data_fields, 0, strlen($this->_data_fields)-2);
+			$script_save_record = str_ireplace(':data_fields', $this->_data_fields, $script_save_record);
+			$script_save_record = str_ireplace(':controller_save', $this->_property['controller_save'], $script_save_record);
+			$script_save_record = str_ireplace(':text', $this->_text, $script_save_record);			
+			
+			OuterHTML::add($script_save_record);
+
+
+			$script_add_record = $this->_tpl_addrecord_handler;
+			$script_add_record = str_ireplace(':text', $this->_text, $script_add_record);
+
+			OuterHTML::add($script_add_record);
+		}
 		
-		$script_add_record = $this->_tpl_addrecord_handler;
-		$script_add_record = str_ireplace(':text', $this->_text, $script_add_record);
-		######################################################
-		OuterHTML::add($script_add_record);
-		
-		//---------------------
-		
-		//script de carga de datos por AJAX
-		$script_loaddata = str_ireplace(':controller_load', $this->_property['controller_load'], $this->_tpl_loaddata_handler);
-		######################################################
-		if( $this->_property['controller_load'] )
+		//---------------------------------------------------------------------
+
+		if( isset($this->_property['controller_load']) ){
+			//script de carga de datos por AJAX
+			$script_loaddata = str_ireplace(':controller_load', $this->_property['controller_load'], $this->_tpl_loaddata_handler);
+
 			OuterHTML::add($script_loaddata);
+
+
+			$script_search = str_ireplace(':controller_load', $this->_property['controller_load'], $this->_tpl_searchrecord_handler);
+			$script_search = str_ireplace(':text', $this->_property['text'], $script_search);
 		
-		
-		
-		//---------------------
-		
+			OuterHTML::add(str_ireplace(':controller_load', $this->_property['controller_load'], $script_search) );
+		}
+
+		//---------------------------------------------------------------------		
+
 		//Eliminar información
-		$script_delete_record = str_ireplace(':text', $this->_text, $this->_tpl_deleterecord_handler);
-		$script_delete_record = str_ireplace(':controller_delete', $this->_property['controller_delete'], $script_delete_record);
-		######################################################
-		if( $this->_property['controller_delete'] )
+		if( isset($this->_property['controller_delete']) ){
+			$script_delete_record = str_ireplace(':text', $this->_text, $this->_tpl_deleterecord_handler);
+			$script_delete_record = str_ireplace(':controller_delete', $this->_property['controller_delete'], $script_delete_record);
+
 			OuterHTML::add($script_delete_record);
 		
+		}
 		// --------------------
-				
-		//Search
-		$script_search = str_ireplace(':controller_load', $this->_property['controller_load'], $this->_tpl_searchrecord_handler);
-		$script_search = str_ireplace(':text', $this->_property['text'], $script_search);
-		######################################################
-		if( $this->_property['controller_load'] )
-			OuterHTML::add(str_ireplace(':controller_load', $this->_property['controller_load'], $script_search) );
-		
-		
-		// --------------------
-		
+
 		
 		//View Record
 		OuterHTML::add(str_ireplace(':text', $this->_text, $this->_tpl_viewrecord_handler) );
 		
-		
-		//Guardar		
-		if( $this->_property['controller_save'] )
-			OuterHTML::add($script_save_record);
-		
-		
+			
 		//Editar
 		OuterHTML::add(str_ireplace(':text', $this->_text, $this->_tpl_editrecord_handler) );
 				

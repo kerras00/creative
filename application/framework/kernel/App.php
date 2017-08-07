@@ -17,7 +17,6 @@ abstract class App
 
     public static function initialize(){
         self::$config = Creative::include_config( 'app' );
-        Creative::get( 'Conexant' )->open();
     }
 
 

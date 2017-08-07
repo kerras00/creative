@@ -14,7 +14,7 @@ return [
     | Supported: "file", "cookie", "database"
     |
     */
-    'driver' => 'database',
+    'driver' => 'file',
 
     'use_cookies' => 1,
     /*

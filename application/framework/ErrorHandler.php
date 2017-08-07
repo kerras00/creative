@@ -18,42 +18,46 @@ abstract class ErrorHandler{
 
 	public static function error($code, $message, $file, $line){
 		
-		if (!(error_reporting() & $code)) {        
+		if (!(error_reporting() & $code)) {
 			return; // Este código de error no está incluido en error_reporting
 		}
 
+		$file = substr($file, strpos($file, "application"));
+		$file = str_replace(DS, '/', $file);
+		
+		$error = '<pre>';
 		switch ($code) {
 			case E_ERROR:
-				echo "<strong>FATAL ERROR  [{$code}]</strong> $message<br/>\n";
-				exit;
+				$error .= "<pre><strong>FATAL ERROR  [{$code}]</strong> {$message}</pre><br/>\n";
+				
 			break;
 			
 			case E_COMPILE_ERROR:
-				echo "<strong>COMPILE ERROR  [{$code}]</strong> $message<br/>\n";
-				exit;
+				$error .= "<strong>COMPILE ERROR  [{$code}]</strong> $message<br/>\n";
+				
 			break;
 			
 			case E_PARSE:
-				echo "<b>PARSE ERROR: </b> [$code] $message<br />\n";
-				echo "  Error fatal en la línea $line en el archivo $file";
-				echo "Abortando...<br />\n";
-				exit;
+				$error .= "<b>PARSE ERROR: </b> [$code] $message<br />\n";
+				$error .= "  Error fatal en la línea $line en el archivo $file";
+				$error .= "Abortando...<br />\n";
+				
 				
 			case E_USER_ERROR:
-				echo "<b>ERROR: </b> [$code] $message<br />\n";
-				echo "  Error fatal en la línea $line en el archivo $file";
-				echo "Abortando...<br />\n";
-				exit;
+				$error .= "<b>ERROR: </b> [$code] $message<br />\n";
+				$error .= "  Error fatal en la línea $line en el archivo $file";
+				$error .= "Abortando...<br />\n";
+				
 			break;
 				
 			case E_USER_WARNING:
-				echo "<strong>WARNING[{$code}]</strong> {$message}<br/>\n";
-				exit;
-				break;
+				$error .= "<strong>WARNING[{$code}]</strong> {$message}<br/>\n";
+				
+			break;
 				
 			case E_USER_NOTICE:
-				echo "<strong>USER NOTICE [$code]</strong> {$message} <strong>Line:</strong> $line in {$file}<br/<br/>\n";
-				exit;
+				$error .= "<strong>USER NOTICE [$code]</strong> {$message} <strong>Line:</strong> $line in {$file}<br/<br/>\n";
+				
 			break;
 			
 			/**
@@ -62,32 +66,28 @@ abstract class ErrorHandler{
 			* pero que también podría ocurrir en el curso normal al ejecutar un script.
 			*/
 			case E_NOTICE:
-				if( ENVIRONMENT == 'development' ){
-					//echo "<strong>NOTICE [$code]</strong> {$message} <strong>Line:</strong> $line in {$file}<br/>\n";
-				} else {
-					logs::error( "NOTICE [$code] {$message}\n" );
-				}
+				$error .= "<strong>NOTICE:</strong> {$message} [<strong>line:</strong> $line <strong>in</strong> {$file}]";
 			break;
 			
 			
 			case E_STRICT:
-				echo "<strong>STRICT ERROR  [{$code}]</strong> $message<br/>\n";
-				exit;
+				$error .= "<strong>STRICT ERROR  [{$code}]</strong> $message<br/>\n";
+				
 			break;
 			
         	
 			
 			default:
 				if( ENVIRONMENT == 'development' ){
-					echo "<strong>UNDEFINED ERROR [{$code}]: </strong> {$message}  <strong>Line:</strong>: $line in {$file}<br/>\n";
-					exit;
+					$error .= "<strong>UNDEFINED ERROR [{$code}]: </strong> {$message}  <strong>Line:</strong>: $line in {$file}<br/>\n";
+					
 				} else {
 					logs::error( "UNDEFINED ERROR [{$code}]: {$message} </strong> Line: {$line} in {$file}" );
 				}
 			break;
 				
 		}
-
+		echo $error . '</pre>';
 		/* No ejecutar el gestor de errores interno de PHP */
 		//return true;
 	}
@@ -103,9 +103,148 @@ abstract class ErrorHandler{
 		}			
 	}
 
+	private static
+		$exception_type = [
+			'database' => 'CreativeDataBaseException'
+			, 'SmartyCompilerException' => 'CreativeSmartyCompilerException'
+		];
 
+	public static function exception( $type, $number, $title, $message = '' ){
+		
+		$template = Creative::default_template_html();	
+		$content_file =  file_get_contents( __DIR__ . '/tpl/exception.tpl');
+		$type = self::$exception_type[$type] == '' ? 'CreativeException' : self::$exception_type[$type];
+
+		$content_file = str_ireplace(':content', $content_file, $template);
+		$content_file = str_ireplace(':content', $content_file, $template);
+		
+		$content_file = str_ireplace(':header', CreativeBase::get_name() . '  <small>v'.CreativeBase::get_version().'</small>', $content_file);	
+		$content_file = str_ireplace(':exception_number', $number, $content_file);
+		$content_file = str_ireplace(':exception_type', $type, $content_file);
+		$content_file = str_ireplace(':exception_title',$title, $content_file);			
+			
+		if( $message != '' ){
+			$message = '<div class="error_info"><p>' . $message . '</p></div>';
+		}
+			
+		$content_file = str_ireplace(':exception_message',$message, $content_file);
+		
+		$out = '<ul>';
+		$trace = debug_backtrace();
+		array_shift($trace);
+
+		foreach( $trace as $key => $value){
+			
+			$out .= '<li>';
+			$line = $value['line'];
+			$file = $value['file'];
+
+			$file = substr($file, strpos($file, "application"));
+			$file = str_replace(DS, '/', $file);
+
+			if( isset($value['class']) ){
+
+				$out .= '<strong>'.$value['class'] .'</strong>';
+
+				if( isset($value['function']) ){
+					$out .= ' -> <strong>'.$value['function'].'</strong> ';
+				}
+				if( isset($value['line']) ){
+					$out .= "[line: {$value['line']} - ". $file . "] ";
+				}
+				if( isset($value['args']) ){
+					
+					$arguments = '';
+					foreach ($value['args'] as $args_ix => $arg) {
+						if (!empty($args)) {
+							$arguments .= ', ';
+						}
+						switch (gettype($arg)) {
+							case 'integer':
+							case 'double':
+								$a = $arg;
+							break;
+							case 'string':
+								$arg = htmlspecialchars(substr($arg, 0, 64)).((strlen($arg) > 64) ? '...' : '');
+								$a = "'$arg'";
+							break;
+							case 'array':
+								$a = 'Array('.count($arg).')';
+							break;
+							case 'object':
+								$a = 'Object('.get_class($arg).')';
+							break;
+							case 'resource':
+								$a = 'Resource('.strstr($arg, '#').')';
+							break;
+							case 'boolean':
+								$a = $arg ? 'True' : 'False';
+							break;
+							case 'NULL':
+								$a = 'Null';
+							break;
+							default:
+								$a = 'Unknown';
+						}
+
+						$arguments .= $args_ix+1 .': '. $a.'<br/>';
+					}
+
+					$popover = 'data-toggle="popover" data-placement="top" data-content="'.$arguments.'"';
+					$out .= ' - <a '.$popover.'>['.count($value['args']) .' Argument'. (count($value['args'])>0 ? 's': '') .']</a>';
+				}
+
+			} else {
+				if( isset($value['function']) ){
+					$out .= '<strong>'.$value['function'].'</strong> ';
+				}
+				if( isset($value['line']) ){
+					$out .= "[line: {$value['line']} - ". $file . "] ";
+				}
+			}			
+			$out .= ' -  [mem: ' . ceil( memory_get_usage()/1024) . 'Kb] </li>';
+		}
+
+
+
+		if( $out != '' ){
+			$out = '<div class="error_info"><p>' . $out . '</ul></p></div>';
+		}
+			
+
+		$content_file = str_ireplace(':calleds',$out, $content_file);
+		
+		echo($content_file);
+		exit;
+	}
+
+
+	public static function exception_ex( $type, $number, $ex ){
 	
-	public static function run_exception( $exception_title, $exception_message = '' ){
+		$template = Creative::default_template_html();	
+		$content_file =  file_get_contents( __DIR__ . '/tpl/exception.tpl');
+		$type = self::$exception_type[$type] == '' ? 'CreativeException' : self::$exception_type[$type];
+
+		$content_file = str_ireplace(':content', $content_file, $template);
+		$content_file = str_ireplace(':content', $content_file, $template);
+		
+		$content_file = str_ireplace(':header', CreativeBase::get_name() . '  <small>v'.CreativeBase::get_version().'</small>', $content_file);	
+		$content_file = str_ireplace(':exception_number', $number, $content_file);
+		$content_file = str_ireplace(':exception_type', $type, $content_file);
+		$content_file = str_ireplace(':exception_title',$ex->desc, $content_file);
+
+		$message = $ex->getMessage();
+		$message = '<div class="error_info"><p>' . $message . '</p></div>';	
+				
+		$content_file = str_ireplace(':exception_message',$message, $content_file);		
+		$content_file = str_ireplace(':calleds','', $content_file);
+		
+		echo($content_file);
+		exit;
+	}
+
+
+	public static function _run_exception_( $exception_title, $exception_message = '' ){
 		
 		$template = Creative::default_template_html();	
 		$file = __DIR__ . '/tpl/exception.tpl';
@@ -142,7 +281,7 @@ abstract class ErrorHandler{
 
 			/*if( isset($value['file']) )
 				$out .= '<strong>File:</strong> '.$value['file'].'<br/>';
-*/
+			*/
 			if( isset($value['class']) )
 				$out .= '<strong>Class:</strong> '.$value['class'].' -> ';
 			
@@ -169,7 +308,19 @@ set_error_handler("ErrorHandler::error");
 
 set_exception_handler( 	
 	function ($ex){
-	   	echo $ex->getMessage();
+
+		$type = get_class($ex);
+
+		switch ( TRUE ) {
+			case $type == 'SmartyCompilerException':
+				ErrorHandler::exception_ex( 'SmartyCompilerException', 'SM0001', $ex );
+			break;
+			
+			default:
+				echo $ex->getMessage();
+			break;
+		}
+		
 	}
 );
 

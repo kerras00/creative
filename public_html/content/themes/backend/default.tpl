@@ -1,10 +1,11 @@
 {include file="includes/head.tpl"}
 {include file="includes/header.tpl"}
+
 <main id="main-content">
     <div id="main-content-section" class="main-section">
 
-        {if $breadcrumbs == true } 
-            {include file=$theme.dir|cat:'includes/breadcrumbs.tpl'} 
+        {if isset($breadcrumbs) AND $breadcrumbs==true} 
+            {include file="includes/breadcrumbs.tpl"} 
         {/if} 
 
         {if strpos($view_html , ".tpl") == true } 

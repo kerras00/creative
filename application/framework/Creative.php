@@ -180,16 +180,10 @@ class Creative extends CreativeBase
     public static function default_template_html(){
 		$content= '';
 		if (file_exists( __DIR__ . '/tpl/template.tpl')){
-			$file = fopen(__DIR__ . '/tpl/template.tpl', 'r');
-			while(!feof($file)) {
-				$content .= fgets($file);
-			}
-			fclose($file);
+			return file_get_contents( __DIR__ . '/tpl/template.tpl');
 		} else {
 			die( 'Error in default_template_html' );
 		}
-
-		return $content ;
 	}
  
 

@@ -26,7 +26,7 @@
                     <tr>
                         {if isset($table.columns) && count($table.columns)}
                             {foreach from=$table.columns item=column}
-                                <th align="{$column.align|default:'left'}" {if $column.type=='label'}style="text-align: center;"{/if}>{$column.text}</th>
+                                <th align="{$column.align|default:'left'}" {if  array_key_exists('type',$column)===TRUE AND $column.type=='label'}style="text-align: center;"{/if}>{$column.text}</th>
                             {/foreach}
                         {/if}
                         <th align="center" style="text-align: center;">
@@ -38,7 +38,7 @@
                     <tr>
                         {if isset($table.columns) && count($table.columns)}
                             {foreach from=$table.columns item=column}
-                                <th align="{$column.align|default:'left'}" {if $column.type=='label'}style="text-align: center;"{/if}>{$column.text}</th>
+                                <th align="{$column.align|default:'left'}" {if  array_key_exists('type',$column)===TRUE AND $column.type=='label'}style="text-align: center;"{/if}>{$column.text}</th>
                             {/foreach}
                         {/if}
                         <th align="center" style="text-align: center;">
@@ -55,22 +55,25 @@
 
                         <tr id="tr_{$record.id}">
                             {if isset($table.columns) && count($table.columns)} 
+
                                 {foreach $table.columns as $field => $attr}
-                                {*foreach from=$table.attrs item=attr*}
 
                                 <td align="{$attr['align']|default:'left'}">
                                     {*Si la attra es de tipo "date"*}
-                                    {if isset($attr['type']) AND $attr['type'] == 'date'}
-                                        {$record[$field]|date_format:$attr['format']}
-                                        {*Si la attra es de tipo "number"*}
-                                    {elseif isset($attr['type']) AND $attr['type'] == 'number'}
-                                        {* 'format' => array( int Decimanles, string Separador de deciamles, string Separador de Miles ) *} 
-                                        {number_format($record[$field], $attr['format'][0], $attr['format'][1], $attr['format'][2])}
-                                        {*Si la attra es de tipo "label"*} 
-                                    {elseif isset($attr['type']) AND $attr['type'] == 'label'}
-                                        <span class="label label-{$record[$attr['labelclass']]|default:'default'}" {if $attr[ 'tooltips']}{*html::tooltips($record[$attr[ 'tooltips']])*}{/if}>
-                                            {$record[$field]}
-                                        </span> 
+                                    {if array_key_exists('type',$attr)===TRUE}
+                                        {if $attr.type == 'date'}
+                                            {$record[$field]|date_format:$attr['format']}
+                                            {*Si la attra es de tipo "number"*}
+                                        {elseif $attr.type == 'number'}
+                                            {* 'format' => array( int Decimanles, string Separador de deciamles, string Separador de Miles ) *} 
+                                            {number_format($record[$field], $attr['format'][0], $attr['format'][1], $attr['format'][2])}
+                                            {*Si la attra es de tipo "label"*} 
+                                        {elseif $attr.type == 'label'}
+                                            <span class="label label-{$record[$attr['labelclass']]|default:'default'}" {if $attr[ 'tooltips']}{*html::tooltips($record[$attr[ 'tooltips']])*}{/if}>
+                                                {$record[$field]}
+                                            </span> 
+                                         {/if}
+                                   
                                     {else}
                                     {*Si no existe un tipo establecido, pero se tiene un formato*} 
                                         {if isset($attr['format']) AND $attr['format']}

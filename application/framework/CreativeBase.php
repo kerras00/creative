@@ -10,10 +10,14 @@ class CreativeBase {
 	
 	const CLASS_FILE_EXT = '.php';
 	
-	public static function get_info(){
-		return 'Creative - A PHP Framework For Web Mega Creativo';
+	public static function get_name(){
+		return 'Creative';
 	}
-	
+
+	public static function get_info(){
+		return 'Creative - A PHP Framework For Web by Mega Creativo';
+	}
+
 	public static function get_tpl_exception( $title, $error_info = '', $other_info = '' ){
 		
 		$content_file = '';

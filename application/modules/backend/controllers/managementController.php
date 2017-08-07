@@ -107,9 +107,14 @@ class managementController extends backendController {
 		));
 		
 		$perfil = [];
-		foreach ($this->model_profiles->all() as $key => $value) {
-			$perfil[$value['id']] = $value['name'];
+		$profiles = $this->model_profiles->all();
+
+		if( count($profiles) ){
+			foreach ($profiles as $key => $value) {
+				$perfil[$value['id']] = $value['name'];
+			}			
 		}
+
 		//Perfil
 		$ModalRecord->add_field(array(
 			'col'	=> array('sm'=>6,'md'=>3),
@@ -164,7 +169,7 @@ class managementController extends backendController {
 		));
 		
 		
-		$source = $this->get_source_view( 'permissions', 'management', 'backend');
+		$source = $this->get_source_view( 'permissions', 'management', 'backend' );
 		$ModalRecord->add_field(array(
 			'col'	=> array('sm'=>12),
 			'type'	=> 'source',
@@ -393,7 +398,7 @@ class managementController extends backendController {
 
 	
 	private function database(){
-		
+		return true;
 		$this->model_generic = $this->load_model('profiles');
 		$data_db = $this->model_generic->exec('SHOW TABLES FROM '. DB_DATABASE);
 		
