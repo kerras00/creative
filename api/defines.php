@@ -19,6 +19,10 @@ if (!defined('DOMAIN')) {
 	define('DOMAIN', $host);
 }
 
+define('E_CUSTOM', -1000);
+define('E_PDO', -1001);
+
+
 /**
 * 
 * @var Defina la URL BASE del Sitio

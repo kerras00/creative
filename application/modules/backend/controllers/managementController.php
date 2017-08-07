@@ -69,14 +69,11 @@ class managementController extends backendController {
 		$this->model = $this->load_model('users');
 		$this->model_profiles = $this->load_model('profiles');
 		
-		$ModalRecord = Creative::get( 'Components' )->render('ModalRecord', array(
-			//'allow_save'		=> TRUE,
-			//'controller_delete'	=> '/api/v1/'.$this->module_name.'.json/',
-			//'controller_save' 	=> '/api/v1/'.$this->module_name.'.json/',
-			//'controller_load'	=> '/api/v1/'.$this->module_name.'.json/',
+		$ModalRecord = Creative::get( 'Components' )->render('ModalRecord', [
+			'add_record' => TRUE,
 			 'size' 	=> 'lg'
 			,'text'		=> Lang::get('dashboard.modules.users')
-		));
+		]);
 		
 		//Nombre
 		$ModalRecord->add_field(array(
@@ -169,7 +166,7 @@ class managementController extends backendController {
 		));
 		
 		
-		$source = $this->get_source_view( 'permissions', 'management', 'backend' );
+		$source = $this->include_source_view( 'permissions', 'management', 'backend' );
 		$ModalRecord->add_field(array(
 			'col'	=> array('sm'=>12),
 			'type'	=> 'source',
@@ -261,69 +258,65 @@ class managementController extends backendController {
 		$this->model = $this->load_model('users');
 		$this->model_profiles = $this->load_model('profiles');
 		
-		$ModalRecord = Creative::get( 'Components' )->render('ModalRecord', array(
-			//'allow_save'		=> TRUE,
-			//'controller_delete'	=> '/api/v1/'.$this->module_name.'.json/',
-			//'controller_save' 	=> '/api/v1/'.$this->module_name.'.json/',
-			//'controller_load'	=> '/api/v1/'.$this->module_name.'.json/',
-			 'size' 	=> 'lg'
-			,'text'		=> 'Perfiles'
-		));
+		$ModalRecord = Creative::get( 'Components' )->render('ModalRecord', [
+			  'add_record' => TRUE
+			, 'size' 	=> 'lg'
+			, 'text'	=> 'Perfiles'
+		]);
 		
 		$info = Registry::get('profiles')['fields_info'];
 	
 		//Nombre
-		$ModalRecord->add_field(array(
-			'col'	=> $info['name']['col'],
-			'id'	=> 'name',
-			'type'	=> $info['name']['type'],
-			'label'	=> Registry::get('profiles')['fields']['name'],
-			'required'=> $info['name']['required'],
-		));
-		
+		$ModalRecord->add_field([
+			'id'		=> 'name',
+			'col'		=> $info['name']['col'],
+			'type'		=> $info['name']['type'],
+			'label'		=> $info['name']['text'],
+			'required'	=> $info['name']['required'],
+		]);		
 		
 
 		//Modulo por defecto
-		foreach( Registry::get_modules() as $key => $value){
+		foreach( Registry::get_modules() as $key => $value)
+		{
 			$menu[$key] = $value['text'];
-		}
-		
-		$ModalRecord->add_field(array(
-			'col'	=> col(4,4,6),
-			'id'	=> 'default_module',
-			'type'	=> 'select',
-			'default'	=> 'inicio',
-			'label'	=> Lang::get('dashboard.attrs.default_module'),
-			'items'	=>  $menu,
-			'required'=> TRUE,
-		));
+		}		
+		$ModalRecord->add_field([
+			'id'		=> 'default_module',
+			'col'		=> $info['default_module']['col'],			
+			'type'		=> $info['default_module']['type'],
+			'default'	=> $info['default_module']['default'],
+			'label'		=> $info['default_module']['text'],
+			'items'		=> $menu,
+			'required'	=> $info['default_module']['required'],
+		]);
 		
 				
 		//Descripción
 		$ModalRecord->add_field(array(
-			'col'	=> col(8,8,6),
 			'id'	=> 'description',
-			'type'	=> 'text',
-			'label'	=> Lang::get('dashboard.attrs.description'),
+			'col'	=> $info['description']['col'],			
+			'type'	=> $info['description']['type'],
+			'label'	=> $info['description']['text'],
 		));
 		
 
 		//Estatus
-		$ModalRecord->add_field(array(
-			'col'	=> col(4,4,6),
-			'id'	=> 'status',
-			'type'	=> 'select',
-			'label'	=> Lang::get('personal_attr.status'),			
-			'required'=> TRUE,
-			'items'	=> array(
-				'-1' => Lang::get('selection'),
-				'1' => Lang::get('user_status.active'),
-				'0' => Lang::get('user_status.inactive'),
-			)
-		));
+		$ModalRecord->add_field([
+			'id'		=> 'status',
+			'col'		=> $info['status']['col'],
+			'type'		=> $info['status']['type'],
+			'label'		=> $info['status']['text'],			
+			'required'	=> $info['status']['required'],
+			'items'		=> [
+				'-1' 	=> Lang::get('selection'),
+				'1' 	=> Lang::get('user_status.active'),
+				'0' 	=> Lang::get('user_status.inactive'),
+			]
+		]);
 		
 		
-		$source = $this->get_source_view( 'permissions', 'management', 'backend');
+		$source = $this->include_source_view( 'permissions', 'management', 'backend');
 		$ModalRecord->add_field(array(
 			'col'	=> array('md'=>12),
 			'type'	=> 'source',
@@ -359,9 +352,6 @@ class managementController extends backendController {
 		$this->view->assign('filters'	, Registry::get('profiles')['filters']);
 		$this->view->assign('fields_db'	, $this->_fields_db);
 		
-		//$fields = $this->database();
-		//$this->view->assign('fields'	, $fields);
-		
 		//Prepara la tabla
 		$this->view->assign('table', array(
 			'columns'	=> array(
@@ -370,7 +360,7 @@ class managementController extends backendController {
 					'primary'	=> TRUE,
 				),	
 				'status_text'	=> array(
-					'field' => Lang::get('dashboard.attrs.status'),
+					'text' => Lang::get('dashboard.attrs.status'),
 					'align' => 'center',
 					'type'	=> 'label',					
 					'class' => 'status_class',

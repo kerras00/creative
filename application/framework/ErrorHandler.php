@@ -74,12 +74,21 @@ abstract class ErrorHandler{
 				$error .= "<strong>STRICT ERROR  [{$code}]</strong> $message<br/>\n";
 				
 			break;
-			
-        	
+
+			case E_PDO:
+				$message  = '<strong style="color:red">'.$message.'</strong> ';
+				$message .= '<pre>'.$file.'</pre><br/>';
+        		$error .= "<strong>PDO ERROR: </strong>{$message}";
+			break;	
+
+
+			case E_CUSTOM:
+        		$error .= "<strong>UNDEFINED ERROR: </strong> {$message}";
+			break;	
 			
 			default:
 				if( ENVIRONMENT == 'development' ){
-					$error .= "<strong>UNDEFINED ERROR [{$code}]: </strong> {$message}  <strong>Line:</strong>: $line in {$file}<br/>\n";
+					$error .= "<strong>UNDEFINED ERROR: </strong> {$message} [<strong>line:</strong> $line <strong>in</strong> {$file}]";
 					
 				} else {
 					logs::error( "UNDEFINED ERROR [{$code}]: {$message} </strong> Line: {$line} in {$file}" );

@@ -137,9 +137,13 @@ class Registry
             'text' => 'Dashboard',
             'icon'=> 'fa fa-dashboard',
             'module' => 'backend',
-        ]; 
+        ];
+
         $registry = array_reverse($arr, true);
-        
+        foreach (array_reverse($arr, true) as $mdule_name => $module_attr) 
+        {
+            $registry[$mdule_name]['access'] = 0;
+        }
         $registry = json_encode($registry, JSON_PRETTY_PRINT);
 
         return $registry;

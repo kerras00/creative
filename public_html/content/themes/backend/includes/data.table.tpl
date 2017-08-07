@@ -26,7 +26,7 @@
                     <tr>
                         {if isset($table.columns) && count($table.columns)}
                             {foreach from=$table.columns item=column}
-                                <th align="{$column.align|default:'left'}" {if  array_key_exists('type',$column)===TRUE AND $column.type=='label'}style="text-align: center;"{/if}>{$column.text}</th>
+                                <th align="{$column.align|default:'left'}" {if array_key_exists('type',$column)===TRUE AND $column.type=='label'}style="text-align: center;"{/if}>{$column.text}</th>
                             {/foreach}
                         {/if}
                         <th align="center" style="text-align: center;">
@@ -38,7 +38,7 @@
                     <tr>
                         {if isset($table.columns) && count($table.columns)}
                             {foreach from=$table.columns item=column}
-                                <th align="{$column.align|default:'left'}" {if  array_key_exists('type',$column)===TRUE AND $column.type=='label'}style="text-align: center;"{/if}>{$column.text}</th>
+                                <th align="{$column.align|default:'left'}" {if array_key_exists('type',$column)===TRUE AND $column.type=='label'}style="text-align: center;"{/if}>{$column.text}</th>
                             {/foreach}
                         {/if}
                         <th align="center" style="text-align: center;">
@@ -58,7 +58,7 @@
 
                                 {foreach $table.columns as $field => $attr}
 
-                                <td align="{$attr['align']|default:'left'}">
+                                <td align="{$attr.align|default:'left'}">
                                     {*Si la attra es de tipo "date"*}
                                     {if array_key_exists('type',$attr)===TRUE}
                                         {if $attr.type == 'date'}
@@ -158,10 +158,10 @@
         }
     };
 
-    {if $dt_notsearching == true}
+    {if isset($dt_notsearching) AND $dt_notsearching == true}
         _option_dt_data.searching = false;
     {/if}
-    {if $dt_notpaginate == true}
+    {if isset($dt_notpaginate) AND $dt_notpaginate == true}
         _option_dt_data.paginate = false;
         _option_dt_data.info = false;
     {/if}

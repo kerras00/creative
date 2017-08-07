@@ -124,7 +124,14 @@ abstract class Controller extends ControllerBase
 		));
 	}
     
-    protected function get_source_view($file, $group, $ambit = BACKEND){
+    protected function include_source_view($file, $group, $ambit = BACKEND){
+    	if( ! file_exists(PATH_MODULES . $ambit .DS. 'views' .DS. $group .DS. $file . '.inc.tpl') ){
+            return false;
+        }
+        return file_get_contents( PATH_MODULES . $ambit .DS. 'views' .DS. $group .DS. $file . '.inc.tpl');
+    }
+
+	protected function include_tpl($file, $group, $ambit = BACKEND){
     	if( ! file_exists(PATH_MODULES . $ambit .DS. 'views' .DS. $group .DS. $file . '.inc.tpl') ){
             return false;
         }

@@ -1,6 +1,5 @@
 <?php
 
-
 define('DB_DRIVER_MYSQL', 'mysql');
 define('DB_DRIVER_MSSQL', 'mssql');
 define('DB_DRIVER_PGSQL', 'pgsql');
@@ -9,34 +8,37 @@ define('DB_DRIVER_SQLITE', 'sqlite');
 /**
 * Esta clase permite crear conexiones con MySQL y hacer consultas a base de datos
 */
-class Conexant {
+class Conexant 
+{
 
 	const 
-		DNS_MYSQL = 'mysql:dbname=@dbname;host=@host;port=@port;charset=@charset'
+		  DNS_MYSQL = 'mysql:dbname=@dbname;host=@host;port=@port;charset=@charset'
 		, DNS_MSSQL = 'sqlsrv:Server=@host;Database=@dbname;ConnectionPooling=0'
 		, DNS_PGSQL = 'pgsql:dbname=@dbname;host=@host';
 
 	protected 
-		$DRIVER			= DB_DRIVER_MYSQL
+		  $DRIVER		= DB_DRIVER_MYSQL
 		, $DB_USER 		= NULL
 		, $DB_PASSWORD 	= NULL
 		, $DB_HOST 		= NULL
 		, $DB_DATABASE 	= NULL
 		, $DB_PORT 		= NULL
 		, $DB_COLLATE 	= NULL
-		, $connection		= NULL;
+		, $connection	= NULL
+		, $statement 	= NULL;
 	
     private 
-    	$error 		= NULL
+    	  $error 	= NULL
 		, $result 	= NULL
 		, $conected = FALSE
 		, $options 	= array(
-			PDO::ATTR_PERSISTENT			=> FALSE
-			, PDO::ATTR_ERRMODE				=> PDO::ERRMODE_EXCEPTION
-			, PDO::ATTR_EMULATE_PREPARES		=> FALSE
+			  PDO::ATTR_PERSISTENT		 => FALSE
+			, PDO::ATTR_ERRMODE			 => PDO::ERRMODE_EXCEPTION
+			, PDO::ATTR_EMULATE_PREPARES => FALSE
 	    );
     
 	
+
     /**
 	* -----------------------------------------------------------------------------
 	* Conexant Constructor
@@ -44,14 +46,15 @@ class Conexant {
 	* 
 	* @return
 	*/
-    public function __construct($DB_USER = NULL, $DB_PASSWORD = NULL, $DB_DATABASE = NULL, $DB_HOST = 'localhost', $DB_PORT = '3306', $DB_COLLATE = 'utf8' ) {
+    public function __construct($DB_USER = NULL, $DB_PASSWORD = NULL, $DB_DATABASE = NULL, $DB_HOST = 'localhost', $DB_PORT = '3306', $DB_COLLATE = 'utf8' )
+	{
 		if( $DB_USER != NULL )
+		{
 			$this->open($DB_USER, $DB_PASSWORD, $DB_DATABASE, $DB_HOST, $DB_PORT, $DB_COLLATE);
+		}			
     }
     
-    public function change_driver( $driver ){
-		$this->DRIVER = $driver;
-	}
+
     
     /**
 	* Esta es la función que se conecta a la base de datos, 
@@ -59,9 +62,11 @@ class Conexant {
 	* lo almacena en el log de errores de PHP
 	* @return
 	*/
-	public function open( $DB_USER = NULL, $DB_PASSWORD = NULL, $DB_DATABASE = NULL, $DB_HOST = 'localhost', $DB_PORT = '3306', $DB_COLLATE = 'utf8' ) {		
+	public function open( $DB_USER = NULL, $DB_PASSWORD = NULL, $DB_DATABASE = NULL, $DB_HOST = 'localhost', $DB_PORT = '3306', $DB_COLLATE = 'utf8' )
+	{		
 		
-		if( $DB_USER == NULL) {
+		if( $DB_USER == NULL)
+		{
 			$this->DB_USER 		= DB_USER;
 			$this->DB_PASSWORD 	= DB_PASSWORD;
 			$this->DB_HOST 		= DB_HOST;
@@ -80,10 +85,11 @@ class Conexant {
     	mb_internal_encoding( 'UTF-8' );
 		mb_regex_encoding( 'UTF-8' );
 		
-		try {			
+		try 
+		{			
 			//Seleccionar el Driver de Base de Datos por defecto para armar el DSN
-			switch( $this->DRIVER ){
-
+			switch( $this->DRIVER )
+			{
 				//Connection to MariaDB or MySQL
 				case 'mariadb':	
 
@@ -128,12 +134,14 @@ class Conexant {
 			
 			$this->conected = TRUE;
 			return $this->conected;
+
 		} catch (PDOException $ex) {
 						
 			//error_log($ex->getMessage());
 			$title = 'Could not connect to database';
 
-			if( ENVIRONMENT == 'development' ){
+			if( ENVIRONMENT == 'development' )
+			{
 				$message  = '<strong>Connection Data:</strong><br/>';
 				$message .= '<strong>Driver:</strong> '.$this->DRIVER.'<br/>';
 				$message .= '<strong>Server:</strong> '.$this->DB_HOST.'<br/>';
@@ -151,8 +159,7 @@ class Conexant {
 
 			return FALSE;
 		}
-	}
-    
+	}    
     
    
     
@@ -160,9 +167,12 @@ class Conexant {
     * Desconecta y cierra la conexión activa con la base de datos
     * @return void
     */
-    public function close() {
-    	try{
-    		if( $this->conected ){
+    public function close()
+	{
+    	try
+		{
+    		if( $this->conected )
+			{
 				$this->connection = null;
 		        $this->connection = NULL;
 		        $this->conected = FALSE;
@@ -170,38 +180,34 @@ class Conexant {
 		} catch ( Excepcion $ex) {
 			
 		}
-        
     }
     
+
+
     /**
 	* Esta función nos devuelve el número de error (en caso de haberlo) 
 	* al haberse ejecutado una consulta o procedimiento.
 	* 
 	* @return
 	*/
-    public function get_error_no() {
+    public function get_error_no()
+	{
         return $this->resource->errno;
     }
+
+
     
     /**
 	* Esta función nos devuelve el mensaje de error (sin el número).
 	* 
 	* @return
 	*/
-    public function get_error() {
+    public function get_error()
+	{
         return $this->resource->error;
     }
+        
     
-    
-    
-  	/**
-	* Devuelve el número de filas modificadas o borradas por la 
-	* sentencia SQL ejecutada. Si no hay filas afectadas devuelve 0.
-	* @param string $query Consulta SQL
-	* 
-	* @return
-	*/
-
 
 	/** 
 	 * TODO: Revisar
@@ -214,13 +220,16 @@ class Conexant {
 	 * @version 1.0.0
 	 * @author name <name@email.com>
 	 */
-	public function query( $query ) {	
+	public function query( $query )
+	{
 	
-		if ( !$this->conected ) {
+		if ( !$this->conected )
+		{
 	        $this->open( $this->DB_USER, $this->DB_PASSWORD, $this->DB_DATABASE, $this->DB_HOST );
 	    }
 
-		try {
+		try
+		{
 			$std = $this->connection->query($query);
 			return $std;
 		} catch (Exception $ex) {
@@ -228,41 +237,6 @@ class Conexant {
 			return FALSE;
 		}
 	}
-
-
-
-
-
-
-
-	protected $stmt;
-	public function single($query, $params = null){
-        if (!$this->connection) {
-	        $this->open( $this->DB_USER, $this->DB_PASSWORD, $this->DB_HOST, $this->DB_DATABASE );
-	    }
-	    
-	    $query = trim(str_replace(array(chr(13).chr(10), "\r\n", "\n", "\r"), array("", "", "", ""), $query));
-    	$query = strtolower($query);
-    	
-    	if ( ($this->stmt = $this->connection->prepare($query)) ) {
-			try {
-				if ( !$this->stmt->execute( $params ) ) {
-					$result = $this->stmt->errorInfo();
-					print_r($this->stmt->errorInfo());
-					return $result;
-				}
-				$result = $this->stmt->fetchColumn();
-				$this->stmt->closeCursor();
-				return $result;
-
-			} catch(PDOException $e){
-				/*if ($this->connection->getErrorNo()) {
-		            error_log($this->connection->getError());
-		        }*/
-				echo $e->getMessage();
-			}
-		}
-    }
     
     
     /**
@@ -287,17 +261,6 @@ class Conexant {
 			);
 	}
     
-	/**
-	* Ejecuta una consulta preparada, 
-	* limpia los valores ingresados de palabras reservadas MySQL,
-	* y escapa tods los caracteres
-	* 
-	* @param string $query Consulta SQL
-	* @param array $params Parametros de la consulta
-	* @param int $fetchmode Tipo de resultado obtenido [object|array]
-	* 
-	* @return mixed
-	*/
 
 	/**
 	 * ----------------------------------------------------------------------------
@@ -314,48 +277,73 @@ class Conexant {
 	 * 
 	 * @param string $query
 	 * @param array $params
+	 * 
 	 * @return void
 	 */
-	public function execute( $query, $params = array() ) {
+	public function execute( $query, $params = [] ) 
+	{
 		$result = NULL;
+
+		if ( !empty($params) )
+		{
+			foreach ($params as $key => $value)
+			{
+				switch (gettype($value))
+				{
+					case 'NULL':
+						$params[ $key ] = [null, PDO::PARAM_NULL];
+					break;
+					case 'resource':
+						$params[ $key ] = [$value, PDO::PARAM_LOB];
+					break;
+					case 'boolean':
+						$params[ $key ] = [($value ? '1' : '0'), PDO::PARAM_BOOL];
+					break;
+					case 'integer':
+					case 'double':
+						$params[ $key ] = [$value, PDO::PARAM_INT];
+					break;
+					case 'string':
+						$params[ $key ] = [$value, PDO::PARAM_STR];
+					break;
+				}
+			}
+		}
 		
-	  	if ( !$this->conected ) {
+	  	if ( !$this->conected )
+		{
 	        $this->open( $this->DB_USER, $this->DB_PASSWORD, $this->DB_DATABASE, $this->DB_HOST );
 	    }	    
 
     	$query_formated = $this->format_before($query);
 		
-    	try {    		
-			if ( ($this->stmt = $this->connection->prepare($query_formated)) ) {
-				
-				if ( !$this->stmt->execute( $params ) ) {
-					$result = $this->stmt->errorInfo();
-					ErrorHandler::error($result);
-					return array();
+    	try 
+		{    		
+			if ( $statement = $this->connection->prepare($query_formated) )
+			{
+				foreach ($params as $key => $value)
+				{
+					$statement->bindValue($key, $value[ 0 ], $value[ 1 ]);
 				}
 
-				//if( stripos($query, 'select') !==FALSE OR stripos($query, 'show') !==FALSE){
-				$result = $this->stmt->fetchAll( PDO::FETCH_ASSOC );
-				//}
-				
-				$this->stmt->closeCursor();
+				if ( $statement->execute() )
+				{
+					$result = $statement->fetchAll( PDO::FETCH_ASSOC );
+					$this->statement = $statement;
+					return $result;
+				} else {
+					ErrorHandler::error(E_PDO, $statement->errorInfo(), $query , __LINE__);
+					return FALSE;
+				}				
 			}
-		} catch(PDOException $ex){
+		} catch(PDOException $ex) {
 			
-			$out  = '<strong style="color:red">'.$ex->getMessage().'</strong><br/>';
-			$out .= '<strong>File:</strong> '.$ex->getFile().'<br/>';
-			$out .= '<strong>Method:</strong> '. __FUNCTION__ .'<br/>';
-			$out .= '<strong>Line:</strong> '.$ex->getLine();
-			
-			$add =  '<strong>Query: </strong><br/><pre>' . $query.'</pre>';
-			if( count($params)>0 ){
-				$add .= '<strong>Parameters: </strong>';
-				//$add .= '<br/>Paramns: ' . var_dump ($params);
-			}			
-			ErrorHandler::error('database', 'EC0003', 'Error executing Query', $out);
+			$message  = '<strong style="color:red">'.$ex->getMessage().'</strong> ';
+			$message .= '[<strong>line:</strong> '.$ex->getLine().' <strong>in</strong> '.$ex->getFile().']<br/>';
+			$message .= '<pre>' . $query.'</pre>';
+
+			ErrorHandler::error(E_PDO, $ex->getMessage(),  $query, $ex->getLine());
 		}
-			
-		return $result;
     }
     
     
@@ -365,26 +353,9 @@ class Conexant {
 	* @return
 	*/
     public function row_count(){
-		$result = $this->stmt->rowCount();
+		$result = $this->statement->rowCount();
 		return $result;
 	}
-    
-    /**
-	* 
-	* 
-	* @return
-	*/
-	public function table_exists($table){
-		/*$table_in_db = @mysql_query('SHOW TABLES FROM '.$this->DB_DATABASE.' LIKE "'.$table.'"');
-        if($table_in_db){
-        	if(mysql_num_rows($table_in_db)==1){
-                return true; // The table exists
-            }else{
-            	array_push($this->result,$table." does not exist in this database");
-                return false; // The table does not exist
-            }
-        }*/
-    }
     
     
     /**
@@ -395,18 +366,19 @@ class Conexant {
 	* 
 	* @return
 	*/
-	public function row($query, $params = NULL, $fetchmode = PDO::FETCH_ASSOC ) {
+	public function row( $query, $params = [] )
+	{
         $result = $this->execute($query, $params);
-        if (!is_null($result)) {
-            if (!is_object($result)) {
-                return count($result)>0 ? $result[0] : array();
+        if (!is_null($result))
+		{
+            if (!is_object($result))
+			{
+                return count($result) > 0 ? $result[0] : [];
             } else {
-               // $row = $this->connection->fetchArray($result);
-               //return $row[0];
                return $result[0];
             }
         }
-        return null;
+        return FALSE;
     }
     
     
@@ -416,166 +388,87 @@ class Conexant {
 	* 
 	* @return
 	*/
-    public function change_database($database) {
+    public function change_database($database)
+	{
         $this->connection->changeDB($database);
     }
     
-	private function prepare($sql, $params) {
-        $escaped = '';
-        if ($params) {
-            foreach ($params as $key => $value) {
-                if (is_bool($value)) {
-                    $value = $value ? 1 : 0;
-                } elseif (is_double($value)) {
-                    $value = str_replace(',', '.', $value);
-                } elseif (is_numeric($value)) {
-                    if (is_string($value)) {
-                        $value = "'" . $this->provider->escape($value) . "'";
-                    } else {
-                        $value = $this->provider->escape($value);
-                    }
-                } elseif (is_null($value)) {
-                    $value = "NULL";
-                } else {
-                    $value = "'" . $this->provider->escape($value) . "'";
-                }
-                $escaped[] = $value;
-            }
-        }
-        $this->params = $escaped;
-        $q = preg_replace_callback("/(\?)/i", array($this, "replaceParams"), $sql);
-        return $q;
-    }
 
     /**
      * Iniciar una transacción
      * @return boolean, true on success or false on failure
      */
-    public function begin(){
-	  	if ( !$this->conected ) {
+    public function begin()
+	{
+	  	if ( !$this->conected )
+		{
 	        $this->open( $this->DB_USER, $this->DB_PASSWORD, $this->DB_DATABASE, $this->DB_HOST );
 	    }
         return $this->connection->beginTransaction();
     }
     
+
     /**
      * confirmar una transacción
      *  @return boolean, true on success or false on failure
      */
-    public function commit(){
+    public function commit()
+	{
         return $this->connection->commit();
     }
     
+
     /**
      *  Revertir una transacción
      *  @return boolean, true on success or false on failure
      */
-    public function rollback(){
+    public function rollback()
+	{
         return $this->connection->rollBack();
     }
     
     
-  /**
+  	/**
      * Ejecuta una consulta
      * @param String La consulta
      * @return void
      */
-    public function execute_call($sp, $parametros = null) {
-    	 if( empty( $parametros ) ){
+    public function execute_call($sp, $params = null)
+	{
+    	if( empty($params) )
+		{
             return false;
         }
-    		$sql = "CALL `{$sp}` ";
-        $values = array();
-        foreach( $parametros as $field => $value ){
+
+    	$sql = "CALL {$sp} ";
+        $values = [];
+
+        foreach( $params as $field => $value )
+		{
             $values[] = "'" .$value. "'";
         }
         
         $sql .= ' ('. implode(', ', $values) .')';
         $results = $this->connection->query( $sql );
-        if( $this->connection->error ) {
+
+        if( $this->connection->error )
+		{
             $this->log_db_errors( $this->connection->error, $sql );
             return false;
-        }
-        else{
-            $row = array();
-            while( $r = $results->fetch_assoc() ) {
-                $row[] = $r;
-            }
-            $row = $row[0];
-            return $row;   
+        } else {
+            return $results->fetch_assoc();
         }
     }
 
+
 	/**
-	* Agrega pameros a la consulta
-	* 
-	* @param undefined $param Placeholder del valor que se usará en la consulta
-	* @param undefined $value Valor del parametro
-	* @param undefined $type Tipo de parametro. Por defecto NULL
-	* 
-	* @return
-	*/
-	public function bind($param, $value, $type = null){
-		if (is_null($type)) {
-			switch (true) {
-				case is_int($value):
-				  $type = PDO::PARAM_INT;
-				  break;
-				case is_bool($value):
-				  $type = PDO::PARAM_BOOL;
-				  break;
-				case is_null($value):
-				  $type = PDO::PARAM_NULL;
-				  break;
-				default:
-				  $type = PDO::PARAM_STR;
-			}
-		}
-		
-		$this->stmt->bindValue($param, $value, $type);
-	}
-
-
-    /**
-     *  Devuelve el ultimo ID autonumerico insertado
-     *  @return string
-     */
+	 *  Devuelve el ultimo ID autonumerico insertado
+	 *  @return string
+	 */
     public function last_insert_id(){
 		return $this->connection->lastInsertId();
     }
-    
-
- 	
-	
- /**
-   * Sanitize user data
-   *
-   * Example usage:
-   * $user_name = $database->filter( $_POST['user_name'] );
-   * 
-   * Or to filter an entire array:
-   * $data = array( 'name' => $_POST['name'], 'email' => 'email@address.com' );
-   * $data = $database->filter( $data );
-   *
-   * @access public
-   * @param mixed $data
-   * @return mixed $data
-   */
-	public function filter( $data ){
-		if( !is_array( $data ) ){
-			$data = mysqli_real_escape_string( $this->connection, $data );
-			$data = trim( htmlentities( $data, ENT_QUOTES, 'UTF-8', false ) );
-     }
-     else{
-         //Self call function to sanitize array data
-         $data = array_map( array( $this, 'filter' ), $data );
-     }
-     return $data;
-	}
-    
-
-	
-	
+    	
 	
 	/**
 	* Extra function to filter when only mysqli_real_escape_string is needed
@@ -584,22 +477,25 @@ class Conexant {
 	* @return mixed $data
 	*/
 	public function escape( $data ){
-	   if( !is_array( $data ) ){
-	       $data = $this->link->real_escape_string( $data );
-	   }
-	   else {
-	       //Self call function to sanitize array data
+	   if( !is_array($data) )
+	   {
+	       $data = $this->connection->real_escape_string( $data );
+	   } else {
 	       $data = array_map( array( $this, 'escape' ), $data );
 	   }
 	   return $data;
 	}
 
+
+
     /**
     * Destruir el objeto
     * Cierra todas las conexiones a la base de datos
     */
-    public function __deconstruct() {
-        foreach ( $this->connections as $connections ) {
+    public function __deconstruct()
+	{
+        foreach ( $this->connections as $connections )
+		{
             $connections->close();
         }
     }

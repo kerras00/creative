@@ -5,7 +5,7 @@ class Model {
     protected $conex;
 	protected $table = '';
 	protected $pk = '';
-	protected $variables = NULL;
+	protected $variables = [];
 	
 	protected $DB_USER ;
 	protected $DB_PASSWORD ;
@@ -291,17 +291,18 @@ class Model {
 	}
 	
 	
-	public function exec($sql, $array = null) {
+	public function exec($sql, $array = [])
+	{
 		
-		if($array !== null) {
+		if( !empty($params) )
+		{
 			$result =  $this->conex->execute($sql, $array);	
-		}
-		else {
+		} else {
 			$result =  $this->conex->execute($sql, $this->variables);	
 		}
 		
 		// Empty bindings
-		$this->variables = array();
+		$this->variables = [];
 		return $result;
 	}
 	

@@ -23,7 +23,7 @@
 	{if isset($table.columns) && count($table.columns)}
 		{foreach $table.columns as $key => $value}
 			_datable_columns.push('{$key}');
-			{if $value["primary"] == true}_datable_columns_pk = '{$key}';{/if}
+			{if isset($value.primary) AND $value.primary == true}_datable_columns_pk = '{$key}';{/if}
 		{/foreach}
 	{/if}
 				

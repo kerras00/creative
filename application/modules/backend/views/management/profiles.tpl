@@ -10,7 +10,7 @@
 		controller='/backend/'|cat:$module|cat:'/'}
 {/if}
 
-{include file="includes/scripts.back.tpl" general=true}
+{include file="includes/scripts.tpl" general=true}
 
 {include file="includes/permissions.tpl"}
 

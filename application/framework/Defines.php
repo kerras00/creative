@@ -39,6 +39,8 @@ if (!defined('BASE_URL')) {
 	define('BASE_URL', $host);
 }
 
+define('E_CUSTOM', -1000);
+define('E_PDO', -1001);
 
 /************************************* Core/Kernel *************************************
 * 

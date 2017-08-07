@@ -48,7 +48,7 @@ return [
         'shared' => 'Compartir',
         'avanced_search' => 'Realizar una busqueda avanzada.',
         'users_module' => 'Gestión de usuarios del sistema.',
-
+        'status' => 'Estatus',
         'modules_field_undefined' => 'No existen campos para configurar.',
 
         'profiles_module' => 'Gestión de perfiles y control de acceso de usuarios.',
@@ -57,12 +57,33 @@ return [
         'permission_custom' => 'Personalizar permisos.'      ,  
         'permission_access_yes' => 'Puede escribir en el campo.',
         'permission_access_hidden' => 'El campo estará oculto.',
-        'permission_access_readonly' => 'El campo será de solo lectura.'
+        'permission_access_readonly' => 'El campo será de solo lectura.',
+        'default_module' => 'Página de inicio por defecto.',
+
+        'description'=> 'Descripción',
+
+        'selection_check'=> 'Seleccionar todos',
+        'selection_inverse'=> 'Invertir selección',
+        'selection_uncheck'=> 'Borrar selección',
 
     ],
 
-    
-
+    'attrs' => [
+        'code' => 'Código',
+        'status' => 'Estatus',
+        'name' => 'Nombre',
+        'last_name' => 'Apellido',
+        'alias' => 'Alias',
+        'pass' => 'Contraseña',
+        'repeat_pass' => 'Repita tu contraseña',
+        'profile' => 'Perfil',
+        'dni' => 'Cédula',
+        'email' => 'Correo electrónico',
+        'birthdate' => 'Fecha de nacimiento',
+        'description' => 'Descripción',
+        'default_module' => 'Página de inicio',
+        'status'=> 'Estatus',         
+    ],
 
 
     'personal_attr' => [
@@ -79,24 +100,6 @@ return [
         'birthdate' => 'Fecha de nacimiento',
         
     ],
-
-    'attrs' => [
-        'code' => 'Código',
-        'status' => 'Estatus',
-        'name' => 'Nombre',
-        'last_name' => 'Apellido',
-        'alias' => 'Alias',
-        'pass' => 'Contraseña',
-        'repeat_pass' => 'Repita tu contraseña',
-        'profile' => 'Perfil',
-        'dni' => 'Cédula',
-        'email' => 'Correo electrónico',
-        'birthdate' => 'Fecha de nacimiento',
-        'description' => 'Descipción',
-        'default_module' => 'Página de inicio',
-        'status'=> 'Estatus',         
-    ],
-
 
     'module' => 'Módulo|Módulos',
     'actions' =>[        

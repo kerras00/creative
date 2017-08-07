@@ -8,39 +8,11 @@ class ModalRecord {
 	const SIZE_LARGE 	= 'lg';
 	const SIZE_MEDIUM 	= 'md';
 	const SIZE_SMALL 	= 'sm';
-
-	/**
-	* @col Distribución de las columnas
-	* @label texto Inidcativo del control
-	* @id ID del Control
-	* @type Indica el tipo de campo
-	* @required Indica si es requerido
-	*/
- 	/*const INPUT = '
-	 	<div class="{col}" style="margin-bottom:5px">
-			<label for="{id}">{label} {required_info} </label>
-			<input id="{id}" type="{type}" value="" class="form-control {required}" {required} {readonly} {guid}>
-		</div>';
-
-
-
- 	const SELECT = '
-	 	<div class="{col}"  style="margin-bottom:5px">
-			<label for="{id}">{label} {required_info}</label>
-			<div class="fancy-form fancy-form-select">
-				<select id="{id}" class="form-control {required} select2" {required} {multiple} style="width:100%">
-					{option}
-				</select>
-			</div>
-		</div>';
-		*/
-		
 		
 	const FORM_GROUP = '<div class="form-group">:content</div>';
 	
-	
 	private 
-		$_attrs
+		  $_attrs
  		, $_fields
  		, $_header
  		, $_modal
@@ -60,7 +32,7 @@ class ModalRecord {
 	* 
 	* @return
 	*/
-	public function initialize( $property = array() ){
+	public function initialize( $property = [] ){
 		
 		$this->_tpl_modal 	= $this->get_template( 'modal' );
  		$this->_tpl_header	= $this->get_template( 'modal.header' );
@@ -78,7 +50,7 @@ class ModalRecord {
  		
 		$this->_attrs = [];
 
-		array_merge($this->_property, $property);
+		$this->_property = array_merge($this->_property, $property);
 
 		//Colocar Texto del Header
 		$this->_text = $property['text'] ? $property['text'] : '';	
@@ -295,13 +267,19 @@ class ModalRecord {
 	* 
 	* @return
 	*/
-	public function write( $property = array()){
+	public function write()
+	{
 		
 		$modal_body = '';
+
 		if( count($this->_fields)>0 )
-		foreach( $this->_fields as $key => $value){
-			$modal_body .= $value;
+		{
+			foreach( $this->_fields as $key => $value)
+			{
+				$modal_body .= $value;
+			}
 		}
+
 		
 		//---------------------
 		
@@ -314,7 +292,8 @@ class ModalRecord {
 		//---------------------
 		
 		//SCRIPT Save Record
-		if( isset($this->_property['controller_save']) ){
+		if( isset($this->_property['controller_save']) )
+		{
 			$script_save_record = $this->_tpl_asaverecord_handler;
 			$this->_data_fields = substr($this->_data_fields, 0, strlen($this->_data_fields)-2);
 			$script_save_record = str_ireplace(':data_fields', $this->_data_fields, $script_save_record);
@@ -322,17 +301,24 @@ class ModalRecord {
 			$script_save_record = str_ireplace(':text', $this->_text, $script_save_record);			
 			
 			OuterHTML::add($script_save_record);
+			
+		}
 
-
+		//Agregar un nuevo registro
+		if( isset($this->_property['add_record']) )
+		{
 			$script_add_record = $this->_tpl_addrecord_handler;
 			$script_add_record = str_ireplace(':text', $this->_text, $script_add_record);
 
 			OuterHTML::add($script_add_record);
 		}
-		
+
+
+
 		//---------------------------------------------------------------------
 
-		if( isset($this->_property['controller_load']) ){
+		if( isset($this->_property['controller_load']) )
+		{
 			//script de carga de datos por AJAX
 			$script_loaddata = str_ireplace(':controller_load', $this->_property['controller_load'], $this->_tpl_loaddata_handler);
 
@@ -348,7 +334,8 @@ class ModalRecord {
 		//---------------------------------------------------------------------		
 
 		//Eliminar información
-		if( isset($this->_property['controller_delete']) ){
+		if( isset($this->_property['controller_delete']) )
+		{
 			$script_delete_record = str_ireplace(':text', $this->_text, $this->_tpl_deleterecord_handler);
 			$script_delete_record = str_ireplace(':controller_delete', $this->_property['controller_delete'], $script_delete_record);
 

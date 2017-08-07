@@ -3,7 +3,7 @@
     <div class="modal-content">
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-        <h4 class="modal-title" id="dlg_data_view_title">{if $titulo}{$titulo|cat:' - <small>Resultados de busqueda</small>'}{else}Resultados de busqueda{/if}</h4>
+        <h4 class="modal-title" id="dlg_data_view_title">{if isset($titulo)}{$titulo|cat:' - <small>Resultados de busqueda</small>'}{else}Resultados de busqueda{/if}</h4>
       </div>
       <div class="modal-body">
 		<div class="row">
@@ -13,7 +13,7 @@
 						<tr>
 							{if isset($table.columns) && count($table.columns)}
 								{foreach from=$table.columns item=column}
-									<th align="{$column.align|default:'left'}" {if $column.type=='label'}style="text-align: center;"{/if}>{$column.label}</th>
+									<th align="{$column.align|default:'left'}" {if isset($column.type) AND $column.type=='label'}style="text-align: center;"{/if}>{$column.text}</th>
 								{/foreach}
 							{/if}
 							<th align="center" style="text-align: center;">
@@ -25,7 +25,7 @@
 						<tr>
 							{if isset($table.columns) && count($table.columns)}
 								{foreach from=$table.columns item=column}
-									<th align="{$column.align|default:'left'}" {if $column.type=='label'}style="text-align: center;"{/if}>{$column.label}</th>
+									<th align="{$column.align|default:'left'}" {if isset($column.type) AND  $column.type=='label'}style="text-align: center;"{/if}>{$column.text}</th>
 								{/foreach}
 							{/if}
 							<th align="center" style="text-align: center;">

@@ -12,10 +12,59 @@ abstract class ErrorHandler extends Exception
         $this->statusText = $statusText;
         $this->debug = array(
 			"message" => $debug,
-			"File: " => $this->file,
-			"Line: " => $this->line
+			"file: " => $this->file,
+			"line: " => $this->line
 		);
     }
+
+	public static function error($code, $message, $file, $line){
+		if (!(error_reporting() & $code)) {        
+			return; // Este código de error no está incluido en error_reporting
+		}
+		
+		$view = new View();
+		
+		switch ($code) {
+			case E_USER_ERROR:
+				$message = 'ERROR: ' . $message;
+			break;
+				
+			case E_USER_WARNING:
+				$message = 'WARNING: ' . $message;
+			break;
+			
+			case E_USER_NOTICE:
+				$message = 'NOTICE: ' . $message;
+			break;
+
+			case E_PDO:
+        		$message .= "PDO: {$message}";
+			break;
+
+			case E_CUSTOM:
+        		$message .= "ERROR: {$message}";
+			break;
+
+			default:
+				$message = 'UNDEFINED: ' . $message;
+			break;
+				
+		}
+
+		$body = array(
+			"status"  => $code,
+			"statusHttp" => 500,
+			"statusText" => $message,
+		);
+		
+		if( ENVIRONMENT == 'development' ){
+			$body["debug"] = array("line: " => $line ,"file: " => $file);
+		}
+		$view->response(500,$body);
+		
+
+		return true;
+	}
 
 	public static function run_exception( $exception_title, $exception_message = '' )
 	{
